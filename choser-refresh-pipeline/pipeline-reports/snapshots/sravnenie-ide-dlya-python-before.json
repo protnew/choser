@@ -1,0 +1,241 @@
+{
+  "meta": {
+    "id": "sravnenie-ide-dlya-python",
+    "title": "Сравнение IDE для Python",
+    "link": null,
+    "price": 0,
+    "views": 6,
+    "author": "Expert",
+    "state": "открытая",
+    "param_count": 6,
+    "object_count": 4,
+    "tags": null,
+    "description": "Сравнение популярных сред разработки для Python по ключевым критериям",
+    "utility": 0,
+    "utility_price": 0,
+    "weights": null,
+    "updated_at": "2026-05-09",
+    "created_at": 1778353652,
+    "owner_id": null,
+    "org_id": "default",
+    "visibility": "open",
+    "columns": [
+      {
+        "key": "functionality",
+        "title": "Функциональность",
+        "weight": {
+          "old": 25,
+          "new": 20,
+          "reason": "Часть функциональности теперь учитывается через AI и расширения"
+        },
+        "type": "number",
+        "max": 10
+      },
+      {
+        "key": "performance",
+        "title": "Производительность",
+        "weight": 20,
+        "type": "number",
+        "max": 10
+      },
+      {
+        "key": "ui",
+        "title": "Удобство интерфейса",
+        "weight": 15,
+        "type": "number",
+        "max": 10
+      },
+      {
+        "key": "libraries",
+        "title": "Поддержка библиотек",
+        "weight": {
+          "old": 15,
+          "new": 10,
+          "reason": "Все IDE поддерживают pip/conda одинаково хорошо"
+        },
+        "type": "number",
+        "max": 10
+      },
+      {
+        "key": "debugger",
+        "title": "Наличие отладчика",
+        "weight": {
+          "old": 10,
+          "new": 5,
+          "reason": "Базовая функция, не дифференцирует"
+        },
+        "type": "number",
+        "max": 10
+      },
+      {
+        "key": "free",
+        "title": "Бесплатность/лицензия",
+        "weight": 15,
+        "type": "number",
+        "max": 10
+      }
+    ]
+  },
+  "data": [
+    {
+      "id": 3416,
+      "table_id": "sravnenie-ide-dlya-python",
+      "data": {
+        "name": "VS Code",
+        "functionality": {
+          "grade": 8,
+          "comment": "Богатый набор расширений, Git, терминал"
+        },
+        "performance": {
+          "grade": 7,
+          "comment": "Средняя скорость запуска, зависит от плагинов"
+        },
+        "ui": {
+          "grade": 9,
+          "comment": "Высокая кастомизация, современный вид"
+        },
+        "libraries": {
+          "grade": 8,
+          "comment": "Легкая интеграция с pip и виртуальными окружениями"
+        },
+        "debugger": {
+          "grade": 8,
+          "comment": "Отладчик с точками останова и инспекцией переменных"
+        },
+        "free": {
+          "grade": 10,
+          "comment": "Бесплатно, лицензия MIT"
+        }
+      },
+      "tco_1y": null,
+      "tco_3y": null,
+      "tco_5y": null,
+      "irr_3y": null,
+      "irr_5y": null,
+      "roic_3y": null,
+      "roic_5y": null,
+      "currency": "RUB",
+      "tco_calculated_at": null
+    },
+    {
+      "id": 3417,
+      "table_id": "sravnenie-ide-dlya-python",
+      "data": {
+        "name": "PyCharm Community",
+        "functionality": {
+          "grade": 9,
+          "comment": "Продвинутый редактор, рефакторинг, поддержка фреймворков"
+        },
+        "performance": {
+          "grade": 6,
+          "comment": "Тяжелее, требует больше ресурсов"
+        },
+        "ui": {
+          "grade": 8,
+          "comment": "Интуитивный, но может казаться перегруженным"
+        },
+        "libraries": {
+          "grade": 9,
+          "comment": "Глубокая интеграция с пакетами и виртуальными окружениями"
+        },
+        "debugger": {
+          "grade": 9,
+          "comment": "Мощный отладчик с визуализацией данных"
+        },
+        "free": {
+          "grade": 7,
+          "comment": "Бесплатная Community-версия, но ограничена vs Professional"
+        }
+      },
+      "tco_1y": null,
+      "tco_3y": null,
+      "tco_5y": null,
+      "irr_3y": null,
+      "irr_5y": null,
+      "roic_3y": null,
+      "roic_5y": null,
+      "currency": "RUB",
+      "tco_calculated_at": null
+    },
+    {
+      "id": 3418,
+      "table_id": "sravnenie-ide-dlya-python",
+      "data": {
+        "name": "Thonny",
+        "functionality": {
+          "grade": 6,
+          "comment": "Базовый функционал, ориентирован на обучение"
+        },
+        "performance": {
+          "grade": 8,
+          "comment": "Легковесный, быстрый запуск"
+        },
+        "ui": {
+          "grade": 9,
+          "comment": "Очень простой и дружелюбный интерфейс для новичков"
+        },
+        "libraries": {
+          "grade": 6,
+          "comment": "Ограниченная поддержка сторонних пакетов"
+        },
+        "debugger": {
+          "grade": 7,
+          "comment": "Простой пошаговый отладчик"
+        },
+        "free": {
+          "grade": 10,
+          "comment": "Полностью бесплатно с открытым кодом"
+        }
+      },
+      "tco_1y": null,
+      "tco_3y": null,
+      "tco_5y": null,
+      "irr_3y": null,
+      "irr_5y": null,
+      "roic_3y": null,
+      "roic_5y": null,
+      "currency": "RUB",
+      "tco_calculated_at": null
+    },
+    {
+      "id": 3419,
+      "table_id": "sravnenie-ide-dlya-python",
+      "data": {
+        "name": "Spyder",
+        "functionality": {
+          "grade": 7,
+          "comment": "Ориентирован на научные вычисления, интеграция с IPython"
+        },
+        "performance": {
+          "grade": 7,
+          "comment": "Умеренная скорость, может тормозить при больших данных"
+        },
+        "ui": {
+          "grade": 7,
+          "comment": "MATLAB-подобная панель, удобно для анализа данных"
+        },
+        "libraries": {
+          "grade": 8,
+          "comment": "Отличная работа с NumPy, SciPy, matplotlib"
+        },
+        "debugger": {
+          "grade": 7,
+          "comment": "Базовый отладчик с визуализацией переменных"
+        },
+        "free": {
+          "grade": 10,
+          "comment": "Бесплатно, лицензия BSD"
+        }
+      },
+      "tco_1y": null,
+      "tco_3y": null,
+      "tco_5y": null,
+      "irr_3y": null,
+      "irr_5y": null,
+      "roic_3y": null,
+      "roic_5y": null,
+      "currency": "RUB",
+      "tco_calculated_at": null
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "meta": { "name": "العربية", "code": "ar", "dir": "rtl" },
+  "nav": { "tables": "الجداول", "council": "المجلس", "admin": "الإدارة", "settings": "الإعدادات", "catalog": "الكتالوج", "research": "البحث" },
+  "council": { "title": "مجلس الخبراء", "sequential": "تسلسلي", "parallel": "متوازي", "start": "🚀 ابدأ", "started": "بدأ المجلس", "agents": "وكلاء", "question": "سؤال للمجلس", "weight": "الوزن", "score": "النتيجة", "confidence": "الثقة", "recommendation": "التوصية", "consensus": "الإجماع", "editor_summary": "ملخص المحرر", "running": "المجلس يفكر...", "completed": "اكمل المجلس", "persona": "يفكر الآن" },
+  "table": { "title": "العنوان", "add": "إضافة", "save": "حفظ", "cancel": "إلغاء", "delete": "حذف", "edit": "تعديل", "search": "بحث...", "columns": "المعلمات", "rows": "الصفوف", "weight": "الوزن", "no_data": "لا توجد بيانات", "export": "تصدير", "import": "استيراد", "share": "مشاركة" },
+  "error": { "timeout": "انتهت مهلة الطلب", "no_connection": "لا يوجد اتصال بالإنترنت", "generic": "خطأ", "not_found": "غير موجود", "try_again": "حاول مرة أخرى", "check_internet": "تحقق من الإنترنت" },
+  "admin": { "stats": "الإحصائيات", "users": "المستخدمون", "backup": "النسخ الاحتياطي", "settings": "الإعدادات", "analytics": "التحليلات", "decisions": "القرارات", "tables_count": "الجداول", "rows_count": "الصفوف", "tokens_used": "الرموز المستخدمة", "db_size": "حجم قاعدة البيانات" },
+  "common": { "loading": "جاري التحميل...", "save": "حفظ", "cancel": "إلغاء", "delete": "حذف", "add": "إضافة", "edit": "تعديل", "close": "إغلاق", "confirm": "تأكيد", "yes": "نعم", "no": "لا", "ok": "حسناً", "language": "اللغة" }
+}

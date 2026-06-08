@@ -1,0 +1,44 @@
+# Чейчер EDP — Enterprise Decision Platform
+
+# Dependencies
+node_modules/
+
+# Environment (never in image)
+.env
+.env.*
+!.env.example
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Build artifacts (rebuilt in Docker)
+dist/
+
+# Wrangler (CF legacy, not needed in EDP)
+.wrangler/
+
+# Backups (mounted volume)
+backup/*.sqlite
+backup/*.db
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data (mounted volume)
+data/*.sqlite
+data/*.db
+data/*.journal
+
+# Logs
+logs/
+*.log
+
+# Scripts (dev only)
+scripts/

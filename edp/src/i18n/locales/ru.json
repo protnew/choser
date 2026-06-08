@@ -1,0 +1,72 @@
+{
+  "meta": { "name": "Русский", "code": "ru", "dir": "ltr" },
+  "nav": { "tables": "Таблицы", "council": "Совет", "admin": "Админ", "settings": "Настройки", "catalog": "Каталог", "research": "Исследование" },
+  "council": {
+    "title": "Совет экспертов",
+    "sequential": "По очереди",
+    "parallel": "Параллельно",
+    "start": "🚀 Начать",
+    "started": "Совет запущен",
+    "agents": "агентов",
+    "question": "Вопрос к Совету",
+    "weight": "Вес",
+    "score": "Оценка",
+    "confidence": "Уверенность",
+    "recommendation": "Рекомендация",
+    "consensus": "Консенсус",
+    "editor_summary": "Резюме редактора",
+    "running": "Совет думает...",
+    "completed": "Совет завершил",
+    "persona": "Думает сейчас"
+  },
+  "table": {
+    "title": "Название",
+    "add": "Добавить",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "search": "Поиск...",
+    "columns": "Параметры",
+    "rows": "Строки",
+    "weight": "Вес",
+    "no_data": "Нет данных",
+    "export": "Экспорт",
+    "import": "Импорт",
+    "share": "Поделиться"
+  },
+  "error": {
+    "timeout": "Таймаут запроса",
+    "no_connection": "Нет подключения к интернету",
+    "generic": "Ошибка",
+    "not_found": "Не найдено",
+    "try_again": "Попробовать снова",
+    "check_internet": "Проверьте интернет"
+  },
+  "admin": {
+    "stats": "Статистика",
+    "users": "Пользователи",
+    "backup": "Резервная копия",
+    "settings": "Настройки",
+    "analytics": "Аналитика",
+    "decisions": "Решения",
+    "tables_count": "Таблиц",
+    "rows_count": "Строк",
+    "tokens_used": "Токенов использовано",
+    "db_size": "Размер БД"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "delete": "Удалить",
+    "add": "Добавить",
+    "edit": "Редактировать",
+    "close": "Закрыть",
+    "confirm": "Подтвердить",
+    "yes": "Да",
+    "no": "Нет",
+    "ok": "ОК",
+    "language": "Язык"
+  }
+}

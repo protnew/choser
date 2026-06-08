@@ -1,0 +1,9 @@
+{
+  "meta": { "name": "Français", "code": "fr", "dir": "ltr" },
+  "nav": { "tables": "Tableaux", "council": "Conseil", "admin": "Admin", "settings": "Paramètres", "catalog": "Catalogue", "research": "Recherche" },
+  "council": { "title": "Conseil d'Experts", "sequential": "Séquentiel", "parallel": "Parallèle", "start": "🚀 Démarrer", "started": "Conseil démarré", "agents": "agents", "question": "Question au Conseil", "weight": "Poids", "score": "Score", "confidence": "Confiance", "recommendation": "Recommandation", "consensus": "Consensus", "editor_summary": "Résumé de l'éditeur", "running": "Le Conseil réfléchit...", "completed": "Conseil terminé", "persona": "En cours de réflexion" },
+  "table": { "title": "Titre", "add": "Ajouter", "save": "Enregistrer", "cancel": "Annuler", "delete": "Supprimer", "edit": "Modifier", "search": "Rechercher...", "columns": "Paramètres", "rows": "Lignes", "weight": "Poids", "no_data": "Aucune donnée", "export": "Exporter", "import": "Importer", "share": "Partager" },
+  "error": { "timeout": "Délai d'attente dépassé", "no_connection": "Pas de connexion internet", "generic": "Erreur", "not_found": "Non trouvé", "try_again": "Réessayer", "check_internet": "Vérifiez votre internet" },
+  "admin": { "stats": "Statistiques", "users": "Utilisateurs", "backup": "Sauvegarde", "settings": "Paramètres", "analytics": "Analytique", "decisions": "Décisions", "tables_count": "Tableaux", "rows_count": "Lignes", "tokens_used": "Tokens utilisés", "db_size": "Taille BD" },
+  "common": { "loading": "Chargement...", "save": "Enregistrer", "cancel": "Annuler", "delete": "Supprimer", "add": "Ajouter", "edit": "Modifier", "close": "Fermer", "confirm": "Confirmer", "yes": "Oui", "no": "Non", "ok": "OK", "language": "Langue" }
+}

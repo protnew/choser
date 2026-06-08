@@ -1,0 +1,9 @@
+{
+  "meta": { "name": "Português", "code": "pt", "dir": "ltr" },
+  "nav": { "tables": "Tabelas", "council": "Conselho", "admin": "Admin", "settings": "Configurações", "catalog": "Catálogo", "research": "Pesquisa" },
+  "council": { "title": "Conselho de Especialistas", "sequential": "Sequencial", "parallel": "Paralelo", "start": "🚀 Iniciar", "started": "Conselho iniciado", "agents": "agentes", "question": "Pergunta ao Conselho", "weight": "Peso", "score": "Pontuação", "confidence": "Confiança", "recommendation": "Recomendação", "consensus": "Consenso", "editor_summary": "Resumo do editor", "running": "O Conselho está pensando...", "completed": "Conselho concluído", "persona": "Pensando agora" },
+  "table": { "title": "Título", "add": "Adicionar", "save": "Salvar", "cancel": "Cancelar", "delete": "Excluir", "edit": "Editar", "search": "Buscar...", "columns": "Parâmetros", "rows": "Linhas", "weight": "Peso", "no_data": "Sem dados", "export": "Exportar", "import": "Importar", "share": "Compartilhar" },
+  "error": { "timeout": "Tempo limite esgotado", "no_connection": "Sem conexão", "generic": "Erro", "not_found": "Não encontrado", "try_again": "Tentar novamente", "check_internet": "Verifique sua internet" },
+  "admin": { "stats": "Estatísticas", "users": "Usuários", "backup": "Backup", "settings": "Configurações", "analytics": "Análises", "decisions": "Decisões", "tables_count": "Tabelas", "rows_count": "Linhas", "tokens_used": "Tokens usados", "db_size": "Tamanho BD" },
+  "common": { "loading": "Carregando...", "save": "Salvar", "cancel": "Cancelar", "delete": "Excluir", "add": "Adicionar", "edit": "Editar", "close": "Fechar", "confirm": "Confirmar", "yes": "Sim", "no": "Não", "ok": "OK", "language": "Idioma" }
+}

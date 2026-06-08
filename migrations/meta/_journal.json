@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1772900932908,
+      "tag": "0000_flat_gambit",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1772909809563,
+      "tag": "0001_fts5_search",
+      "breakpoints": true
+    }
+  ]
+}

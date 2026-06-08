@@ -1,0 +1,34 @@
+     1|services:
+     2|  choser:
+     3|    build:
+     4|      context: .
+     5|      dockerfile: Dockerfile
+     6|    container_name: choser-edp
+     7|    restart: unless-stopped
+     8|    ports:
+     9|      - "127.0.0.1:3002:3000"
+    10|    environment:
+    11|      - NODE_ENV=production
+    12|      - PORT=3000
+    13|      - LOG_LEVEL=${LOG_LEVEL:-info}
+    14|      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    15|      - AUTH_ENABLED=${AUTH...lse}
+    16|      - JWT_SECRET=${JWT_...ion}
+      - ZAI_API_KEY=${ZAI_API_KEY}
+    18|      - ZAI_MODEL=${ZAI_MODEL:-GLM-5.1}
+    19|      - ZAI_BASE_URL=${ZAI_BASE_URL:-https://open.bigmodel.cn/api/coding/paas/v4}
+    20|    env_file:
+    21|      - .env
+    22|    volumes:
+    23|      - C:\ChoserDB\data:/app/data
+    24|      - C:\ChoserDB\backup:/app/backup
+    25|    mem_limit: ${MEM_LIMIT:-2g}
+    26|    cpus: ${CPUS:-2}
+    27|    stop_grace_period: 60s
+    28|    healthcheck:
+    29|      test: ["CMD", "wget", "-qO-", "http://localhost:3000/v1/api/health"]
+    30|      interval: 30s
+    31|      timeout: 5s
+    32|      start_period: 10s
+    33|      retries: 3
+    34|

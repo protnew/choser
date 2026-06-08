@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+
+# Build
+dist/
+
+# Environment
+.env
+*.env
+!.env.example
+hermes-dot-env
+hermes-config.yaml
+
+# Database
+*.db
+*.db-wal
+*.db-shm
+*.sql
+*.sqlite
+
+# Data
+backup/
+backups/
+edp/data/
+edp/backup/
+choser-export/
+data/
+
+# Build artifacts
+.wrangler/
+
+# Scripts with data
+scripts/archive/
+seed_*.mjs
+seed_*.cjs
+batch3_results.json
+
+# Local
+start-local.bat
+deploy-hot.sh
+*.log
+analysis/
+tmp/
+
+# OS
+.DS_Store
+Thumbs.db

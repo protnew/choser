@@ -1,0 +1,23 @@
+{
+  "pending": [],
+  "inProgress": {},
+  "done": [
+    {
+      "id": "sravnenie-ide-dlya-python",
+      "title": "Сравнение IDE для Python",
+      "category": "software",
+      "paramsBefore": 6,
+      "paramsAfter": 10,
+      "objectsBefore": 4,
+      "objectsAfter": 4,
+      "tokens": {
+        "input": 2471,
+        "output": 4839
+      },
+      "elapsedSeconds": 134.3,
+      "finishedAt": "2026-05-22T10:55:10.428Z"
+    }
+  ],
+  "failed": [],
+  "skipped": []
+}
