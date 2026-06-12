@@ -1,47 +1,60 @@
-# Dependencies
-node_modules/
-
-# Build
-dist/
-
-# Environment
-.env
-*.env
-!.env.example
-hermes-dot-env
-hermes-config.yaml
-
-# Database
-*.db
-*.db-wal
-*.db-shm
-*.sql
-*.sqlite
-
-# Data
-backup/
-backups/
-edp/data/
-edp/backup/
-choser-export/
-data/
-
-# Build artifacts
-.wrangler/
-
-# Scripts with data
-scripts/archive/
-seed_*.mjs
-seed_*.cjs
-batch3_results.json
-
-# Local
-start-local.bat
-deploy-hot.sh
-*.log
-analysis/
-tmp/
-
-# OS
-.DS_Store
-Thumbs.db
+     1|# Dependencies
+     2|node_modules/
+     3|
+     4|# Build
+     5|dist/
+     6|
+     7|# Environment
+     8|.env
+     9|*.env
+    10|!.env.example
+    11|hermes-dot-env
+    12|hermes-config.yaml
+    13|
+    14|# Database
+    15|*.db
+    16|*.db-wal
+    17|*.db-shm
+    18|*.sql
+    19|*.sqlite
+    20|
+    21|# Data
+    22|backup/
+    23|backups/
+    24|edp/data/
+    25|edp/backup/
+    26|choser-export/
+    27|data/
+    28|
+    29|# Build artifacts
+    30|.wrangler/
+    31|
+    32|# Scripts with data
+    33|scripts/archive/
+    34|seed_*.mjs
+    35|seed_*.cjs
+    36|batch3_results.json
+    37|
+    38|# Local
+    39|start-local.bat
+    40|deploy-hot.sh
+    41|*.log
+    42|analysis/
+    43|tmp/
+    44|
+    45|# OS
+    46|.DS_Store
+    47|Thumbs.db
+    48|
+    49|# Data files
+    50|*.xlsx
+    51|*.xls
+    52|archive/
+    53|Таблица*/
+    54|
+# Data files
+*.xlsx
+*.xls
+archive/
+Таблица*/
+edp/list_users.js
