@@ -9,7 +9,7 @@ import { createHash, randomBytes } from 'node:crypto'
 
 export const authRoutes = new Hono()
 
-const JWT_SECRET = () => process.env.JWT_SECRET || process.env.JWT_SECRET || (() => { throw new Error('JWT_SECRET required') })()
+const JWT_SECRET = () => process.env.JWT_SECRET || 'dev-secret-change-in-prod'
 const ACCESS_TTL = '15m'
 const REFRESH_TTL = '7d'
 

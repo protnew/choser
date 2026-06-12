@@ -11,7 +11,7 @@ export const comparePassword = async (password, hash) => {
 }
 
 export const createToken = async (user, secret) => {
-    if (!secret || secret === process.env.JWT_SECRET || 'CHANGE-ME') {
+    if (!secret || secret === 'dev-secret') {
         console.warn('[SECURITY] Using fallback JWT secret! Set JWT_SECRET in env.');
     }
     const payload = {
@@ -21,7 +21,7 @@ export const createToken = async (user, secret) => {
         name: user.name,
         exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days
     }
-    return await sign(payload, secret || process.env.JWT_SECRET || 'CHANGE-ME', 'HS256')
+    return await sign(payload, secret || 'dev-secret', 'HS256')
 }
 
 export const verifyToken = async (token, secret) => {
@@ -34,8 +34,8 @@ export const authMiddleware = async (c, next) => {
         return c.json({ error: 'Unauthorized' }, 401)
     }
     const token = authHeader.split(' ')[1]
-    const secret = c.env.JWT_SECRET || process.env.JWT_SECRET || 'CHANGE-ME'
-    if (secret === process.env.JWT_SECRET || 'CHANGE-ME' && c.env.ENVIRONMENT === 'production') {
+    const secret = c.env.JWT_SECRET || 'dev-secret'
+    if (secret === 'dev-secret' && c.env.ENVIRONMENT === 'production') {
         console.error('[SECURITY] JWT_SECRET not set in production!');
         return c.json({ error: 'Server misconfigured' }, 500)
     }

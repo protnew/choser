@@ -50,7 +50,7 @@ auth.post('/login', async (c) => {
         return c.json({ error: 'Invalid credentials' }, 401)
     }
 
-    const token = await createToken(user, c.env.JWT_SECRET || process.env.JWT_SECRET || 'CHANGE-ME')
+    const token = await createToken(user, c.env.JWT_SECRET || 'dev-secret')
 
     // Return token and user info (excluding hash)
     const { password_hash, ...userInfo } = user
@@ -70,7 +70,7 @@ auth.post('/dev-login', async (c) => {
         role: role,
         is_deleted: 0
     }
-    const token = await createToken(mockUser, c.env.JWT_SECRET || process.env.JWT_SECRET || 'CHANGE-ME')
+    const token = await createToken(mockUser, c.env.JWT_SECRET || 'dev-secret')
     return c.json({ token, user: mockUser })
 })
 

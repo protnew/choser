@@ -115,12 +115,12 @@ async function handleGenerateTable(db, env, body, args) {
     const generatedData = await AI_SERVICE.generateTable(env, prompt);
     const tableId = `ai-${Date.now()}`;
     const paramCount = (generatedData.columns || []).length;
-    const objectCount = (generatedData.rows || []).length;
+    const objectCount = (generatedData.rows || generatedData.data || []).length;
     await db.prepare('INSERT INTO tables (id, title, description, state, param_count, object_count, author) VALUES (?, ?, ?, ?, ?, ?, ?)')
         .bind(tableId, generatedData.title, generatedData.description || '', TABLE_STATES.OPEN, paramCount, objectCount, 'AI').run();
     await db.prepare('INSERT INTO columns (table_id, definition) VALUES (?, ?)')
         .bind(tableId, JSON.stringify(generatedData.columns || [])).run();
-    await saveRows(db, tableId, generatedData.rows || [], { withTimestamps: true, kv: null });
+    await saveRows(db, tableId, generatedData.rows || generatedData.data || [], { withTimestamps: true, kv: null });
     return jsonRpcResponse(body.id, { content: [{ type: "text", text: `Table generated successfully! ID: ${tableId}` }] });
 }
 

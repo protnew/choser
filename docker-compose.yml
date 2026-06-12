@@ -1,34 +1,33 @@
-     1|services:
-     2|  choser:
-     3|    build:
-     4|      context: .
-     5|      dockerfile: Dockerfile
-     6|    container_name: choser-edp
-     7|    restart: unless-stopped
-     8|    ports:
-     9|      - "127.0.0.1:3002:3000"
-    10|    environment:
-    11|      - NODE_ENV=production
-    12|      - PORT=3000
-    13|      - LOG_LEVEL=${LOG_LEVEL:-info}
-    14|      - CORS_ORIGINS=${CORS_ORIGINS:-*}
-    15|      - AUTH_ENABLED=${AUTH...lse}
-    16|      - JWT_SECRET=${JWT_...ion}
+services:
+  choser:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: choser-edp
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3002:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - AUTH_ENABLED=${AUTH_ENABLED:-false}
+      - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
       - ZAI_API_KEY=${ZAI_API_KEY}
-    18|      - ZAI_MODEL=${ZAI_MODEL:-GLM-5.1}
-    19|      - ZAI_BASE_URL=${ZAI_BASE_URL:-https://open.bigmodel.cn/api/coding/paas/v4}
-    20|    env_file:
-    21|      - .env
-    22|    volumes:
-    23|      - C:\ChoserDB\data:/app/data
-    24|      - C:\ChoserDB\backup:/app/backup
-    25|    mem_limit: ${MEM_LIMIT:-2g}
-    26|    cpus: ${CPUS:-2}
-    27|    stop_grace_period: 60s
-    28|    healthcheck:
-    29|      test: ["CMD", "wget", "-qO-", "http://localhost:3000/v1/api/health"]
-    30|      interval: 30s
-    31|      timeout: 5s
-    32|      start_period: 10s
-    33|      retries: 3
-    34|
+      - ZAI_MODEL=${ZAI_MODEL:-GLM-5.1}
+      - ZAI_BASE_URL=${ZAI_BASE_URL:-https://open.bigmodel.cn/api/coding/paas/v4}
+    env_file:
+      - .env
+    volumes:
+      - C:\ChoserDB\data:/app/data
+      - C:\ChoserDB\backup:/app/backup
+    mem_limit: ${MEM_LIMIT:-2g}
+    cpus: ${CPUS:-2}
+    stop_grace_period: 60s
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/v1/api/health"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

@@ -43,7 +43,7 @@ export const AI_SERVICE = {
     },
 
     async generateTable(env, prompt, objCount, paramCount) {
-        let systemPrompt = `Ты — эксперт по анализу данных. Создай матрицу принятия решений (JSON).\nПравила: полнота, веса=100%, оценки 0-10, цены USD, русский язык.\nФормат: {"id":"slug","title":"Тема","description":"...","columns":[{"key":"p1","title":"Параметр","weight":20,"type":"number","is_inverse":false}],"data":[{"name":"Объект","price":100,"p1":{"grade":8,"value":"Описание"}}]}`;
+        let systemPrompt = `Ты — эксперт по анализу данных. Создай матрицу принятия решений (СТРОГИЙ JSON).\nПравила: полнота, веса=100%, оценки 0-10, цены USD, русский язык. Каждая ячейка (кроме name и price) ОБЯЗАНА быть объектом вида {"grade": оценка, "value": "подробный текст + ссылка на источник"}.\nФормат: {"id":"slug","title":"Тема","description":"...","columns":[{"key":"p1","title":"Параметр","weight":20,"type":"number","is_inverse":false}],"rows":[{"name":"Объект","price":100,"p1":{"grade":8,"value":"Описание с пруфами и ссылками"}}]}`;
         try {
             if (env.DB) { const s = await env.DB.prepare("SELECT value FROM settings WHERE id = 'system_prompt'").first(); if (s?.value) systemPrompt = s.value; }
         } catch (e) { }

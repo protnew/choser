@@ -74,7 +74,7 @@ tables.get('/table/:id', async (c) => {
         if (authHeader) {
             try {
                 const t = authHeader.split(' ')[1]
-                currentUser = await verifyToken(t, c.env.JWT_SECRET || process.env.JWT_SECRET || 'CHANGE-ME')
+                currentUser = await verifyToken(t, c.env.JWT_SECRET || 'dev-secret')
             } catch (e) { }
         }
 
