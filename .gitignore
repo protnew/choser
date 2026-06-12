@@ -1,25 +1,57 @@
-node_modules
-.wrangler
-.vscode
-.DS_Store
-dist
-*.log
-analysis/
-research_agent/.env
-scripts/archive/
+     1|node_modules
+     2|.wrangler
+     3|.vscode
+     4|.DS_Store
+     5|dist
+     6|*.log
+     7|analysis/
+     8|research_agent/.env
+     9|scripts/archive/
+    10|
+    11|# EDP
+    12|edp/data/
+    13|edp/node_modules/
+    14|edp/public/assets-backup-*/
+    15|*.sqlite
+    16|*.sqlite-wal
+    17|*.sqlite-shm
+    18|*.db
+    19|*.db-wal
+    20|*.db-shm
+    21|edp/debug_*.*
+    22|edp/test_*.*
+    23|!edp/init_edp_v2.mjs
+    24|!backup/*.db
+    25|tmp/
+    26|
+# Data files
+*.xlsx
+*.xls
+*.csv
+matrix-data*
 
-# EDP
+# Backups
+backup/
+backups/
 edp/data/
-edp/node_modules/
+edp/backup/
 edp/public/assets-backup-*/
-*.sqlite
-*.sqlite-wal
-*.sqlite-shm
-*.db
-*.db-wal
-*.db-shm
-edp/debug_*.*
-edp/test_*.*
-!edp/init_edp_v2.mjs
-!backup/*.db
-tmp/
+archive/
+analysis/
+choser-export/
+*.bak
+*.bak-*
+
+# Scripts with data access
+edp/list_users.js
+seed_*.mjs
+seed_*.cjs
+
+# Russian-named data folders
+Таблица*/
+
+# Sync scripts
+sync-public.sh
+backup-cron.sh
+start-local.bat
+deploy-hot.sh

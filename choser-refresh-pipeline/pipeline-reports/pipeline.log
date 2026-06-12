@@ -1,0 +1,325 @@
+[10:16:35] ═══════════════════════════════════════════════════════════
+[10:16:35] 🚀 Choser Table Refresh Pipeline v3
+[10:16:35]    Workers: 6 | Dry run: true
+[10:16:35]    Choser: http://127.0.0.1:3002
+[10:16:35] ═══════════════════════════════════════════════════════════
+[10:16:35] ✅ Choser healthy (DB: 8.2 MB, uptime: 5656s)
+[10:16:35] 📋 Fetching table list...
+[10:17:32] ═══════════════════════════════════════════════════════════
+[10:17:32] 🚀 Choser Table Refresh Pipeline v3
+[10:17:32]    Workers: 6 | Dry run: true
+[10:17:32]    Choser: http://127.0.0.1:3002
+[10:17:32] ═══════════════════════════════════════════════════════════
+[10:17:32] ✅ Choser healthy (DB: 8.2 MB, uptime: 5713s)
+[10:17:32] 📋 Fetching table list...
+[10:17:32]    Total tables in DB: 500
+[10:17:32] 
+📊 FILTER: 500 total → 347 to process
+[10:17:32]    Removed: {"empty":29,"test":1,"copy":18,"edp":35,"oneObj":4,"dup":3,"trash":1,"research":1,"experiment":61}
+[10:17:32] ⚠️ No mode specified. Use --limit N, --table ID, or --all
+[10:17:32]    Available: 347 tables to process
+[10:17:32]    Sample IDs: sravnenie-ide-dlya-python (Сравнение IDE для Python), test-ok (OK Test), vybor-bd-dlya-choser-edp (Базы данных для Choser EDP), llm-podpiski-sravnenie (Подписки LLM: сравнение 10 сервисов), agregatory-dostavki-na-malotonaznyh-avtomobilah (Агрегаторы доставки LCV 29.03.2026)
+[10:26:01] ═══════════════════════════════════════════════════════════
+[10:26:01] 🚀 Choser Table Refresh Pipeline v3
+[10:26:01]    Workers: 6 | Dry run: false
+[10:26:01]    Choser: http://127.0.0.1:3002
+[10:26:01] ═══════════════════════════════════════════════════════════
+[10:26:01] ✅ Choser healthy (DB: 8.2 MB, uptime: 6222s)
+[10:26:01] 📋 Fetching table list...
+[10:26:01]    Total tables in DB: 500
+[10:26:01] 
+📊 FILTER: 500 total → 347 to process
+[10:26:01]    Removed: {"empty":29,"test":1,"copy":18,"edp":35,"oneObj":4,"dup":3,"trash":1,"research":1,"experiment":61}
+[10:26:01] 
+🎯 Target: 1 tables
+[10:26:01] 📊 Queue: 1 pending, 0 already done, 0 previously failed
+[10:26:01] 
+🏃 Launching 1 workers...
+
+[10:26:01] [W0] 📥 Fetching sravnenie-ide-dlya-python...
+[10:26:01] [W0] 📊 Сравнение IDE для Python (software, 6p, 4o)
+[10:26:01] [W0] 🔍 SCOUT analyzing...
+[10:26:02]   ⚠️ LLM attempt 1 failed: LLM 400: {"error":{"code":"1211","message":"模型不存在，请检查模型代码。"}}, retrying...
+[10:26:09] [W0] ❌ Error processing sravnenie-ide-dlya-python: LLM 400: {"error":{"code":"1211","message":"模型不存在，请检查模型代码。"}}
+[10:26:12] 
+═══════════════════════════════════════════════════════════
+[10:26:12] 📊 FINAL REPORT
+[10:26:12] ═══════════════════════════════════════════════════════════
+[10:26:12]    ✅ Done:    0
+[10:26:12]    ❌ Failed:  1
+[10:26:12]    ⏭️ Skipped: 0
+[10:26:12]    ⏱️ Time:    11.4s
+[10:26:12]    💰 Tokens: 0 in / 0 out
+[10:26:12]    💵 Est cost: $0.000
+[10:26:12]    📊 By category: {}
+[10:26:12] 
+   📄 Report: C:\Сделать\Чейчер SCRUM\openclaw\choser-refresh-pipeline\pipeline-reports\report-2026-05-22.json
+[10:26:12] 
+   ⚠️ Failed tables:
+[10:26:12]      sravnenie-ide-dlya-python: LLM 400: {"error":{"code":"1211","message":"模型不存在，请检查模型代码。"}}
+[10:26:12] ═══════════════════════════════════════════════════════════
+[10:33:22] ═══════════════════════════════════════════════════════════
+[10:33:22] 🚀 Choser Table Refresh Pipeline v3
+[10:33:22]    Workers: 6 | Dry run: false
+[10:33:22]    Choser: http://127.0.0.1:3002
+[10:33:22] ═══════════════════════════════════════════════════════════
+[10:33:22] ✅ Choser healthy (DB: 8.2 MB, uptime: 6663s)
+[10:33:22] 📋 Fetching table list...
+[10:33:22]    Total tables in DB: 500
+[10:33:22] 
+📊 FILTER: 500 total → 347 to process
+[10:33:22]    Removed: {"empty":29,"test":1,"copy":18,"edp":35,"oneObj":4,"dup":3,"trash":1,"research":1,"experiment":61}
+[10:33:22] 
+🎯 Target: 1 tables
+[10:33:22] 📊 Queue: 0 pending, 0 already done, 1 previously failed
+[10:33:22] 
+🏃 Launching 1 workers...
+
+[10:33:22] 
+═══════════════════════════════════════════════════════════
+[10:33:22] 📊 FINAL REPORT
+[10:33:22] ═══════════════════════════════════════════════════════════
+[10:33:22]    ✅ Done:    0
+[10:33:22]    ❌ Failed:  1
+[10:33:22]    ⏭️ Skipped: 0
+[10:33:22]    ⏱️ Time:    0.1s
+[10:33:22]    💰 Tokens: 0 in / 0 out
+[10:33:22]    💵 Est cost: $0.000
+[10:33:22]    📊 By category: {}
+[10:33:22] 
+   📄 Report: C:\Сделать\Чейчер SCRUM\openclaw\choser-refresh-pipeline\pipeline-reports\report-2026-05-22.json
+[10:33:22] 
+   ⚠️ Failed tables:
+[10:33:22]      sravnenie-ide-dlya-python: LLM 400: {"error":{"code":"1211","message":"模型不存在，请检查模型代码。"}}
+[10:33:22] ═══════════════════════════════════════════════════════════
+[10:33:51] ═══════════════════════════════════════════════════════════
+[10:33:51] 🚀 Choser Table Refresh Pipeline v3
+[10:33:51]    Workers: 6 | Dry run: false
+[10:33:51]    Choser: http://127.0.0.1:3002
+[10:33:51] ═══════════════════════════════════════════════════════════
+[10:33:51] ✅ Choser healthy (DB: 8.2 MB, uptime: 6692s)
+[10:33:51] 📋 Fetching table list...
+[10:33:51]    Total tables in DB: 500
+[10:33:51] 
+📊 FILTER: 500 total → 347 to process
+[10:33:51]    Removed: {"empty":29,"test":1,"copy":18,"edp":35,"oneObj":4,"dup":3,"trash":1,"research":1,"experiment":61}
+[10:33:51] 
+🎯 Target: 1 tables
+[10:33:51] 📊 Queue: 1 pending, 0 already done, 0 previously failed
+[10:33:51] 
+🏃 Launching 1 workers...
+
+[10:33:51] [W0] 📥 Fetching sravnenie-ide-dlya-python...
+[10:33:51] [W0] 📊 Сравнение IDE для Python (software, 6p, 4o)
+[10:33:51] [W0] 🔍 SCOUT analyzing...
+[10:33:52]   ⏳ Rate limited, waiting 5000ms...
+[10:33:59]   ⏳ Rate limited, waiting 5000ms...
+[10:34:09] [W0] ❌ Error processing sravnenie-ide-dlya-python: Cannot read properties of undefined (reading 'text')
+[10:34:12] 
+═══════════════════════════════════════════════════════════
+[10:34:12] 📊 FINAL REPORT
+[10:34:12] ═══════════════════════════════════════════════════════════
+[10:34:12]    ✅ Done:    0
+[10:34:12]    ❌ Failed:  1
+[10:34:12]    ⏭️ Skipped: 0
+[10:34:12]    ⏱️ Time:    20.6s
+[10:34:12]    💰 Tokens: 0 in / 0 out
+[10:34:12]    💵 Est cost: $0.000
+[10:34:12]    📊 By category: {}
+[10:34:12] 
+   📄 Report: C:\Сделать\Чейчер SCRUM\openclaw\choser-refresh-pipeline\pipeline-reports\report-2026-05-22.json
+[10:34:12] 
+   ⚠️ Failed tables:
+[10:34:12]      sravnenie-ide-dlya-python: Cannot read properties of undefined (reading 'text')
+[10:34:12] ═══════════════════════════════════════════════════════════
+[10:37:28] ═══════════════════════════════════════════════════════════
+[10:37:28] 🚀 Choser Table Refresh Pipeline v3
+[10:37:28]    Workers: 6 | Dry run: false
+[10:37:28]    Choser: http://127.0.0.1:3002
+[10:37:28] ═══════════════════════════════════════════════════════════
+[10:37:28] ✅ Choser healthy (DB: 8.2 MB, uptime: 6909s)
+[10:37:28] 📋 Fetching table list...
+[10:37:28]    Total tables in DB: 500
+[10:37:28] 
+📊 FILTER: 500 total → 347 to process
+[10:37:28]    Removed: {"empty":29,"test":1,"copy":18,"edp":35,"oneObj":4,"dup":3,"trash":1,"research":1,"experiment":61}
+[10:37:28] 
+🎯 Target: 1 tables
+[10:37:28] 📊 Queue: 1 pending, 0 already done, 0 previously failed
+[10:37:28] 
+🏃 Launching 1 workers...
+
+[10:37:28] [W0] 📥 Fetching sravnenie-ide-dlya-python...
+[10:37:28] [W0] 📊 Сравнение IDE для Python (software, 6p, 4o)
+[10:37:28] [W0] 🔍 SCOUT analyzing...
+[10:37:29]   ⏳ Rate limited, waiting 5000ms...
+[10:37:36] [W0] ❌ Error processing sravnenie-ide-dlya-python: Rate limited after all retries
+[10:37:39] 
+═══════════════════════════════════════════════════════════
+[10:37:39] 📊 FINAL REPORT
+[10:37:39] ═══════════════════════════════════════════════════════════
+[10:37:39]    ✅ Done:    0
+[10:37:39]    ❌ Failed:  1
+[10:37:39]    ⏭️ Skipped: 0
+[10:37:39]    ⏱️ Time:    10.5s
+[10:37:39]    💰 Tokens: 0 in / 0 out
+[10:37:39]    💵 Est cost: $0.000
+[10:37:39]    📊 By category: {}
+[10:37:39] 
+   📄 Report: C:\Сделать\Чейчер SCRUM\openclaw\choser-refresh-pipeline\pipeline-reports\report-2026-05-22.json
+[10:37:39] 
+   ⚠️ Failed tables:
+[10:37:39]      sravnenie-ide-dlya-python: Rate limited after all retries
+[10:37:39] ═══════════════════════════════════════════════════════════
+[10:38:52] ═══════════════════════════════════════════════════════════
+[10:38:52] 🚀 Choser Table Refresh Pipeline v3
+[10:38:52]    Workers: 6 | Dry run: false
+[10:38:52]    Choser: http://127.0.0.1:3002
+[10:38:52] ═══════════════════════════════════════════════════════════
+[10:38:53] ✅ Choser healthy (DB: 8.2 MB, uptime: 6994s)
+[10:38:53] 📋 Fetching table list...
+[10:38:53]    Total tables in DB: 500
+[10:38:53] 
+📊 FILTER: 500 total → 347 to process
+[10:38:53]    Removed: {"empty":29,"test":1,"copy":18,"edp":35,"oneObj":4,"dup":3,"trash":1,"research":1,"experiment":61}
+[10:38:53] 
+🎯 Target: 1 tables
+[10:38:53] 📊 Queue: 1 pending, 0 already done, 0 previously failed
+[10:38:53] 
+🏃 Launching 1 workers...
+
+[10:38:53] [W0] 📥 Fetching sravnenie-ide-dlya-python...
+[10:38:53] [W0] 📊 Сравнение IDE для Python (software, 6p, 4o)
+[10:38:53] [W0] 🔍 SCOUT analyzing...
+[10:38:54]   ⏳ ZAI rate limited, trying OpenRouter fallback...
+[10:38:54]   ⚠️ Fallback also failed: 402
+[10:39:00]   ⏳ ZAI rate limited, trying OpenRouter fallback...
+[10:39:00]   ⚠️ Fallback also failed: 402
+[10:39:00] [W0] ❌ Error processing sravnenie-ide-dlya-python: Rate limited after all retries
+[10:39:03] 
+═══════════════════════════════════════════════════════════
+[10:39:03] 📊 FINAL REPORT
+[10:39:03] ═══════════════════════════════════════════════════════════
+[10:39:03]    ✅ Done:    0
+[10:39:03]    ❌ Failed:  1
+[10:39:03]    ⏭️ Skipped: 0
+[10:39:03]    ⏱️ Time:    10.7s
+[10:39:03]    💰 Tokens: 0 in / 0 out
+[10:39:03]    💵 Est cost: $0.000
+[10:39:03]    📊 By category: {}
+[10:39:03] 
+   📄 Report: C:\Сделать\Чейчер SCRUM\openclaw\choser-refresh-pipeline\pipeline-reports\report-2026-05-22.json
+[10:39:03] 
+   ⚠️ Failed tables:
+[10:39:03]      sravnenie-ide-dlya-python: Rate limited after all retries
+[10:39:03] ═══════════════════════════════════════════════════════════
+[10:42:14] ═══════════════════════════════════════════════════════════
+[10:42:14] 🚀 Choser Table Refresh Pipeline v3
+[10:42:14]    Workers: 6 | Dry run: false
+[10:42:14]    Choser: http://127.0.0.1:3002
+[10:42:14] ═══════════════════════════════════════════════════════════
+[10:42:14] ✅ Choser healthy (DB: 8.2 MB, uptime: 7195s)
+[10:42:14] 📋 Fetching table list...
+[10:42:14]    Total tables in DB: 500
+[10:42:14] 
+📊 FILTER: 500 total → 347 to process
+[10:42:14]    Removed: {"empty":29,"test":1,"copy":18,"edp":35,"oneObj":4,"dup":3,"trash":1,"research":1,"experiment":61}
+[10:42:14] 
+🎯 Target: 1 tables
+[10:42:14] 📊 Queue: 1 pending, 0 already done, 0 previously failed
+[10:42:14] 
+🏃 Launching 1 workers...
+
+[10:42:14] [W0] 📥 Fetching sravnenie-ide-dlya-python...
+[10:42:14] [W0] 📊 Сравнение IDE для Python (software, 6p, 4o)
+[10:42:14] [W0] 🔍 SCOUT analyzing...
+[10:42:44] 📈 Progress: 0 done | 0 failed | 0 skipped | 1 active | 0 queued (0.0%)
+[10:43:02] [W0] 🔎 RESEARCH web search...
+[10:43:14] 📈 Progress: 0 done | 0 failed | 0 skipped | 1 active | 0 queued (0.0%)
+[10:43:17]   ⚠️ Web search failed: Command failed: ddgs text -k Сравнение IDE для Python 2025 2026 сравнение рейтинг обзор -m 5 -r ru-ru
+C:\Python311\Lib\site-packages\duckduckgo_search\cli.py:182: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.
+  data = DDGS(proxy=_expand_proxy_tb_alias(proxy), verify=verify).text(
+
+[10:43:32]   ⚠️ Web search failed: Command failed: ddgs text -k лучшие Сравнение IDE для Python рейтинг отзывы 2026 -m 5 -r ru-ru
+C:\Python311\Lib\site-packages\duckduckgo_search\cli.py:182: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.
+  data = DDGS(proxy=_expand_proxy_tb_alias(proxy), verify=verify).text(
+
+[10:43:33] [W0] 🔨 BUILDER generating (chunks of 10)...
+[10:43:33] [W0]   📦 Chunk 1/1 (6 params)...
+[10:43:44] 📈 Progress: 0 done | 0 failed | 0 skipped | 1 active | 0 queued (0.0%)
+[10:44:04] [W0] ✅ CRITIC validating...
+[10:44:14] 📈 Progress: 0 done | 0 failed | 0 skipped | 1 active | 0 queued (0.0%)
+[10:44:16] [W0] ✅ CRITIC approved (confidence: 0.95)
+[10:44:16] [W0] 💾 Saving...
+[10:44:16] [W0] ❌ Error processing sravnenie-ide-dlya-python: POST http://127.0.0.1:3002/api/table → 500: {"error":"extractTCO is not defined"}
+[10:44:19] 
+═══════════════════════════════════════════════════════════
+[10:44:19] 📊 FINAL REPORT
+[10:44:19] ═══════════════════════════════════════════════════════════
+[10:44:19]    ✅ Done:    0
+[10:44:19]    ❌ Failed:  1
+[10:44:19]    ⏭️ Skipped: 0
+[10:44:19]    ⏱️ Time:    125.2s
+[10:44:19]    💰 Tokens: 0 in / 0 out
+[10:44:19]    💵 Est cost: $0.000
+[10:44:19]    📊 By category: {}
+[10:44:19] 
+   📄 Report: C:\Сделать\Чейчер SCRUM\openclaw\choser-refresh-pipeline\pipeline-reports\report-2026-05-22.json
+[10:44:19] 
+   ⚠️ Failed tables:
+[10:44:19]      sravnenie-ide-dlya-python: POST http://127.0.0.1:3002/api/table → 500: {"error":"extractTCO is not defined"}
+[10:44:19] ═══════════════════════════════════════════════════════════
+[10:52:56] ═══════════════════════════════════════════════════════════
+[10:52:56] 🚀 Choser Table Refresh Pipeline v3
+[10:52:56]    Workers: 6 | Dry run: false
+[10:52:56]    Choser: http://127.0.0.1:3002
+[10:52:56] ═══════════════════════════════════════════════════════════
+[10:52:56] ✅ Choser healthy (DB: 8.2 MB, uptime: 72s)
+[10:52:56] 📋 Fetching table list...
+[10:52:56]    Total tables in DB: 500
+[10:52:56] 
+📊 FILTER: 500 total → 347 to process
+[10:52:56]    Removed: {"empty":29,"test":1,"copy":18,"edp":35,"oneObj":4,"dup":3,"trash":1,"research":1,"experiment":61}
+[10:52:56] 
+🎯 Target: 1 tables
+[10:52:56] 📊 Queue: 1 pending, 0 already done, 0 previously failed
+[10:52:56] 
+🏃 Launching 1 workers...
+
+[10:52:56] [W0] 📥 Fetching sravnenie-ide-dlya-python...
+[10:52:56] [W0] 📊 Сравнение IDE для Python (software, 6p, 4o)
+[10:52:56] [W0] 🔍 SCOUT analyzing...
+[10:52:56]   ⚠️ LLM attempt 1 failed: fetch failed, retrying...
+[10:53:26] 📈 Progress: 0 done | 0 failed | 0 skipped | 1 active | 0 queued (0.0%)
+[10:53:51] [W0] 🔎 RESEARCH web search...
+[10:53:56] 📈 Progress: 0 done | 0 failed | 0 skipped | 1 active | 0 queued (0.0%)
+[10:54:06]   ⚠️ Web search failed: Command failed: ddgs text -k Сравнение IDE для Python 2025 2026 сравнение рейтинг обзор -m 5 -r ru-ru
+C:\Python311\Lib\site-packages\duckduckgo_search\cli.py:182: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.
+  data = DDGS(proxy=_expand_proxy_tb_alias(proxy), verify=verify).text(
+
+[10:54:21]   ⚠️ Web search failed: Command failed: ddgs text -k лучшие Сравнение IDE для Python рейтинг отзывы 2026 -m 5 -r ru-ru
+C:\Python311\Lib\site-packages\duckduckgo_search\cli.py:182: RuntimeWarning: This package (`duckduckgo_search`) has been renamed to `ddgs`! Use `pip install ddgs` instead.
+  data = DDGS(proxy=_expand_proxy_tb_alias(proxy), verify=verify).text(
+
+[10:54:22] [W0] 🔨 BUILDER generating (chunks of 10)...
+[10:54:22] [W0]   📦 Chunk 1/1 (6 params)...
+[10:54:26] 📈 Progress: 0 done | 0 failed | 0 skipped | 1 active | 0 queued (0.0%)
+[10:54:48] [W0] ✅ CRITIC validating...
+[10:54:56] 📈 Progress: 0 done | 0 failed | 0 skipped | 1 active | 0 queued (0.0%)
+[10:55:09] [W0] ✅ CRITIC approved (confidence: 0.92)
+[10:55:09] [W0] 💾 Saving...
+[10:55:10] [W0] ✅ Done! 4 objects, 10 params in 134.3s | Tokens: 2471in/4839out
+[10:55:13] 
+═══════════════════════════════════════════════════════════
+[10:55:13] 📊 FINAL REPORT
+[10:55:13] ═══════════════════════════════════════════════════════════
+[10:55:13]    ✅ Done:    1
+[10:55:13]    ❌ Failed:  0
+[10:55:13]    ⏭️ Skipped: 0
+[10:55:13]    ⏱️ Time:    137.4s
+[10:55:13]    💰 Tokens: 2471 in / 4839 out
+[10:55:13]    💵 Est cost: $0.004
+[10:55:13]    📊 By category: {"software":1}
+[10:55:13] 
+   📄 Report: C:\Сделать\Чейчер SCRUM\openclaw\choser-refresh-pipeline\pipeline-reports\report-2026-05-22.json
+[10:55:13] ═══════════════════════════════════════════════════════════
