@@ -1,0 +1,42 @@
+#!/bin/bash
+# pre-commit hook — блокирует утечку секретов в публичный репо
+# Установка: cd /tmp/choser-sync && git config core.hooksPath .githooks
+
+set -e
+echo "🔒 Checking for secrets..."
+
+# Файлы которые НЕ должны попасть в коммит
+BLOCKED_FILES=".env edp/.env hermes-dot-env hermes-config.yaml"
+
+for f in $BLOCKED_FILES; do
+  if git diff --cached --name-only | grep -q "^$f$"; then
+    echo "⛔ BLOCKED: $f in commit! Remove it."
+    exit 1
+  fi
+done
+
+# Проверить содержимое на ключи
+STAGED=$(git diff --cached --name-only -- '*.js' '*.jsx' '*.yml' '*.yaml' '*.json' '*.env' '*.txt' 2>/dev/null)
+
+if [ -n "$STAGED" ]; then
+  # API ключи
+  if echo "$STAGED" | xargs grep -lE 'sk-[a-zA-Z0-9]{20,}|AIza[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{20,}|glpat-[a-zA-Z0-9]{20,}' 2>/dev/null; then
+    echo "⛔ BLOCKED: API key detected in staged files!"
+    exit 1
+  fi
+  
+  # Email/телефоны
+  if echo "$STAGED" | xargs grep -lE '[a-z]+@(gmail|mail|yandex)\.ru|\+7[0-9]{10}' 2>/dev/null; then
+    echo "⛔ BLOCKED: Personal data detected!"
+    exit 1
+  fi
+  
+  # .db/.sql/.xlsx файлы
+  if git diff --cached --name-only | grep -E '\.(db|sql|sqlite|xlsx|xls)$'; then
+    echo "⛔ BLOCKED: Database/data file detected!"
+    exit 1
+  fi
+fi
+
+echo "✅ Clean — no secrets found"
+exit 0
