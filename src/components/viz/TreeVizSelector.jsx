@@ -29,7 +29,11 @@ export default function TreeVizSelector({ rootName = 'Choser EDP', onSelectTable
             const res = await fetch(`${API}/v1/api/tables?limit=3000`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const json = await res.json();
-            const categories = categorizeTables(Array.isArray(json.tables) ? json.tables : Array.isArray(json) ? json : []);
+            const categories = categorizeTables(
+                Array.isArray(json.data) ? json.data :
+                Array.isArray(json.tables) ? json.tables :
+                Array.isArray(json) ? json : []
+            );
             setTreeData(categories);
             setLoading(false);
         } catch (e) {
