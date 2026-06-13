@@ -1,17 +1,19 @@
 :root {
     --bg-card: #ffffff;
     --border-color: #e2e8f0;
-    --text-color: #0f172a;
-    --text-muted: #64748b;
+    --text-color: #000000;
+    --text-muted: #333333;
     --primary-color: #3b82f6;
+    --bg-main: #f8fafc;
 }
 
 body.dark {
     --bg-card: #1e293b;
     --border-color: #334155;
-    --text-color: #f8fafc;
-    --text-muted: #94a3b8;
+    --text-color: #ffffff;
+    --text-muted: #e2e8f0;
     --primary-color: #60a5fa;
+    --bg-main: #0f172a;
 }
 
 * {
@@ -21,7 +23,9 @@ body.dark {
 }
 
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-color);
+    background-color: var(--bg-main);
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -603,25 +607,26 @@ input, textarea, select {
 
 /* Dark Mode Overrides */
 body.dark {
-    background: #1a1a1a;
-    color: #e5e5e5;
+    background: var(--bg-main);
+    color: var(--text-color);
 }
 
 body.dark .header {
     background: #0f172a;
+    color: #ffffff;
 }
 
 body.dark .modal {
-    background: #262626;
-    color: #fff;
+    background: #1e293b;
+    color: #ffffff;
 }
 
 body.dark input,
 body.dark textarea,
 body.dark select {
-    background: #333;
-    color: #fff;
-    border-color: #444;
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #334155;
 }
 
 body.dark .meta-card {

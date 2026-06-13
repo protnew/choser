@@ -37,7 +37,12 @@ npm run dev:full
 | `npm run dev:full` | Оба одновременно |
 | `npm run db:seed:local` | Пересоздать локальную БД |
 | `npm run build` | Сборка для production |
-| `npm run build:deploy` | Сборка + деплой в Cloudflare |
+| `npm run build:deploy` | Ручная сборка + деплой в Cloudflare |
+
+## Автоматический Деплой (Windows Task Scheduler)
+Для автоматического деплоя из приватного репозитория в публичный GitHub (и далее в Cloudflare Pages) используется скрипт `sync-public.cjs` (и обертка `sync-public.bat`).
+Скрипт полностью вырезает токены, пароли и базы данных перед пушем.
+Он добавлен в **Планировщик заданий Windows (Windows Task Scheduler)** под именем `ChoserSyncPublic` и запускается **ежедневно в 15:30**. При пуше в публичный репозиторий Cloudflare собирает новую версию фронтенда автоматически.
 
 ## Бесплатные лимиты Cloudflare
 

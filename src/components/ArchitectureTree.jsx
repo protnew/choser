@@ -7,38 +7,52 @@ export default function ArchitectureTree() {
     const { theme } = useApp();
     const isDark = theme === 'dark';
 
+    // Helper for winning nodes
+    const winNode = (name, title, objs, params, quality, isDone = false) => ({
+        name: title,
+        winnerName: name,
+        objs,
+        params,
+        quality,
+        isDone,
+        value: 100,
+        itemStyle: { color: quality === 100 ? '#10b981' : (isDone ? '#64748b' : '#f59e0b'), borderColor: isDark ? '#1e293b' : '#fff', borderWidth: 2 },
+        lineStyle: { color: '#10b981', width: 3 }
+    });
+
     const treeData = {
-        name: 'Proxi Architecture\\n(108 Decisions Total)',
-        symbolSize: 15,
-        itemStyle: { color: isDark ? '#3b82f6' : '#2563eb' },
+        name: 'Proxi Architecture',
+        winnerName: '108 Decisions',
+        symbolSize: 20,
+        itemStyle: { color: '#3b82f6' },
         children: [
             {
                 name: '1. Platform',
+                winnerName: 'Platform',
                 itemStyle: { color: '#8b5cf6' },
+                lineStyle: { color: '#10b981', width: 3 },
                 children: [
-                    { name: 'T31: Backend Language\\n🏆 Go (Golang)\\n📊 13 objs, 10 params\\n✅ TABLE (Seeded)', value: 130 },
-                    { name: 'T35: UI Framework\\n🏆 Svelte + Flutter\\n📊 10 objs, 10 params\\n✅ TABLE (Seeded)', value: 100 }
+                    winNode('T31: Backend', '🏆 Go (Golang)', 13, 10, 100),
+                    winNode('T35: UI Framework', '🏆 Svelte + Flutter', 10, 10, 100)
                 ]
             },
             {
-                name: '2. Network & Topology',
+                name: '2. Network',
+                winnerName: 'Topology',
                 itemStyle: { color: '#10b981' },
+                lineStyle: { color: '#10b981', width: 3 },
                 children: [
                     {
-                        name: 'T34: General Topology\\n🏆 P2P + AutoRelay\\n📊 13 objs, 10 params\\n✅ TABLE (Seeded)',
-                        value: 130,
+                        ...winNode('T34: General Topology', '🏆 P2P + AutoRelay', 13, 10, 100),
                         children: [
                             {
-                                name: 'T30: Multiplexer\\n🏆 sing-box + libp2p\\n📊 12 objs, 10 params\\n✅ TABLE (Seeded)',
-                                value: 120,
+                                ...winNode('T30: Multiplexer', '🏆 sing-box + libp2p', 12, 10, 100),
                                 children: [
                                     {
-                                        name: 'T8: Transport Layer\\n🏆 XTLS / Hysteria 2\\n📊 10 objs, 10 params\\n⏳ TABLE (Batch 3)',
-                                        value: 100,
-                                        itemStyle: { color: '#f59e0b' },
+                                        ...winNode('T8: Transport Layer', '🏆 XTLS / Hysteria 2', 10, 10, 0),
                                         children: [
-                                            { name: 'T6: Relay Hosting\\n🏆 VPS + Cloudflare\\n📊 3 objs, 5 params\\n✅ DONE', value: 15, itemStyle: { color: '#64748b' } },
-                                            { name: 'T5: CI/CD\\n🏆 GH Actions\\n📊 3 objs, 4 params\\n✅ DONE', value: 12, itemStyle: { color: '#64748b' } }
+                                            winNode('T6: Relay Hosting', '🏆 VPS + Cloudflare', 3, 5, null, true),
+                                            winNode('T5: CI/CD', '🏆 GH Actions', 3, 4, null, true)
                                         ]
                                     }
                                 ]
@@ -48,26 +62,22 @@ export default function ArchitectureTree() {
                 ]
             },
             {
-                name: '3. Content & Economy',
+                name: '3. Content',
+                winnerName: 'Economy',
                 itemStyle: { color: '#ec4899' },
+                lineStyle: { color: '#10b981', width: 3 },
                 children: [
                     {
-                        name: 'T37: Distributed Storage\\n🏆 Reed-Solomon\\n📊 10 objs, 10 params\\n⏳ TABLE (Batch 3)',
-                        value: 100,
-                        itemStyle: { color: '#f59e0b' },
+                        ...winNode('T37: Storage', '🏆 Reed-Solomon', 10, 10, 0),
                         children: [
-                            { name: 'T20: Streaming Protocol\\n🏆 HLS over P2P\\n📊 10 objs, 10 params\\n⏳ TABLE (Batch 4)', value: 100, itemStyle: { color: '#f59e0b' } },
+                            winNode('T20: Streaming', '🏆 HLS over P2P', 10, 10, 0),
                             {
-                                name: 'T23: Proof-of-Storage\\n🏆 Challenge-Response\\n📊 10 objs, 10 params\\n⏳ TABLE (Batch 4)',
-                                value: 100,
-                                itemStyle: { color: '#f59e0b' },
+                                ...winNode('T23: Proof-of-Storage', '🏆 Challenge-Response', 10, 10, 0),
                                 children: [
                                     {
-                                        name: 'T22: Token Ledger\\n🏆 Nostr State Events\\n📊 10 objs, 10 params\\n⏳ TABLE (Batch 4)',
-                                        value: 100,
-                                        itemStyle: { color: '#f59e0b' },
+                                        ...winNode('T22: Token Ledger', '🏆 Nostr State Events', 10, 10, 0),
                                         children: [
-                                            { name: 'T25: Payment Gateway\\n🏆 Lightning Network\\n📊 10 objs, 10 params\\n⏳ TABLE (Batch 4)', value: 100, itemStyle: { color: '#f59e0b' } }
+                                            winNode('T25: Payment Gateway', '🏆 Lightning Network', 10, 10, 0)
                                         ]
                                     }
                                 ]
@@ -78,23 +88,20 @@ export default function ArchitectureTree() {
             },
             {
                 name: '4. Crypto & Trust',
+                winnerName: 'Trust',
                 itemStyle: { color: '#ef4444' },
+                lineStyle: { color: '#10b981', width: 3 },
                 children: [
                     {
-                        name: 'T17: Identity & Routing\\n🏆 Kademlia + Nostr\\n📊 12 objs, 10 params\\n✅ TABLE (Seeded)',
-                        value: 120,
+                        ...winNode('T17: Identity & Routing', '🏆 Kademlia + Nostr', 12, 10, 100),
                         children: [
                             {
-                                name: 'T16: E2E Encryption\\n🏆 Noise Protocol\\n📊 10 objs, 10 params\\n⏳ TABLE (Batch 3)',
-                                value: 100,
-                                itemStyle: { color: '#f59e0b' },
+                                ...winNode('T16: E2E Encryption', '🏆 Noise Protocol', 10, 10, 0),
                                 children: [
                                     {
-                                        name: 'T13: Groups Crypto\\n🏆 Sender Keys\\n📊 10 objs, 10 params\\n⏳ TABLE (Batch 3)',
-                                        value: 100,
-                                        itemStyle: { color: '#f59e0b' },
+                                        ...winNode('T13: Groups Crypto', '🏆 Sender Keys', 10, 10, 0),
                                         children: [
-                                            { name: 'T15: Symmetric Crypto\\n🏆 AES-256-GCM\\n📊 4 objs, 5 params\\n✅ DONE', value: 20, itemStyle: { color: '#64748b' } }
+                                            winNode('T15: Symmetric Crypto', '🏆 AES-256-GCM', 4, 5, null, true)
                                         ]
                                     }
                                 ]
@@ -105,14 +112,15 @@ export default function ArchitectureTree() {
             },
             {
                 name: '5. Local Client',
+                winnerName: 'Client',
                 itemStyle: { color: '#06b6d4' },
+                lineStyle: { color: '#10b981', width: 3 },
                 children: [
                     {
-                        name: 'T32: Database Layer\\n🏆 SQLite WAL + FTS5\\n📊 11 objs, 10 params\\n✅ TABLE (Seeded)',
-                        value: 110,
+                        ...winNode('T32: Database Layer', '🏆 SQLite WAL + FTS5', 11, 10, 100),
                         children: [
-                            { name: 'T31: Offline Sync\\n🏆 Service Worker\\n📊 4 objs, 5 params\\n✅ DONE', value: 20, itemStyle: { color: '#64748b' } },
-                            { name: 'T30: State Mgmt\\n🏆 Svelte 5 Runes\\n📊 5 objs, 5 params\\n✅ DONE', value: 25, itemStyle: { color: '#64748b' } }
+                            winNode('T31: Offline Sync', '🏆 Service Worker', 4, 5, null, true),
+                            winNode('T30: State Mgmt', '🏆 Svelte 5 Runes', 5, 5, null, true)
                         ]
                     }
                 ]
@@ -124,13 +132,12 @@ export default function ArchitectureTree() {
         tooltip: {
             trigger: 'item',
             triggerOn: 'mousemove',
+            backgroundColor: isDark ? '#1e293b' : '#ffffff',
+            borderColor: isDark ? '#334155' : '#e2e8f0',
+            textStyle: { color: isDark ? '#f8fafc' : '#0f172a' },
             formatter: (params) => {
-                const lines = params.data.name.split('\\n');
-                let html = `<div style="font-weight:bold;margin-bottom:4px;">${lines[0]}</div>`;
-                for(let i=1; i<lines.length; i++) {
-                    html += `<div>${lines[i]}</div>`;
-                }
-                return html;
+                const d = params.data;
+                return `<strong>${d.winnerName}</strong><br/>${d.name}<br/>${d.params ? d.params + ' params, ' + d.objs + ' objs' : ''}`;
             }
         },
         series: [
@@ -138,29 +145,95 @@ export default function ArchitectureTree() {
                 type: 'tree',
                 data: [treeData],
                 top: '5%',
-                left: '10%',
+                left: '12%',
                 bottom: '5%',
                 right: '20%',
-                symbolSize: (value) => Math.max(Math.min(value / 5, 20), 8),
+                symbolSize: (value, params) => {
+                    const p = params.data.params;
+                    if (!p) return 12;
+                    return Math.max(12, p * 1.5);
+                },
                 edgeShape: 'polyline',
                 edgeForkPosition: '63%',
                 initialTreeDepth: 5,
                 lineStyle: {
-                    color: isDark ? '#475569' : '#cbd5e1',
+                    color: isDark ? '#334155' : '#cbd5e1',
                     width: 2
                 },
                 label: {
                     position: 'top',
                     verticalAlign: 'middle',
                     align: 'center',
-                    fontSize: 12,
-                    color: isDark ? '#e2e8f0' : '#1e293b',
-                    backgroundColor: isDark ? '#1e293b' : '#ffffff',
-                    borderColor: isDark ? '#334155' : '#cbd5e1',
+                    backgroundColor: isDark ? '#0f172a' : '#ffffff',
+                    borderColor: isDark ? '#334155' : '#e2e8f0',
                     borderWidth: 1,
-                    borderRadius: 4,
-                    padding: [4, 6],
-                    formatter: (params) => params.data.name.split('\\n')[0]
+                    borderRadius: 8,
+                    padding: [8, 12],
+                    shadowColor: isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)',
+                    shadowBlur: 10,
+                    formatter: function(params) {
+                        const d = params.data;
+                        let html = `{title|${d.winnerName}}\n{winner|${d.name}}`;
+                        if (d.params) {
+                            html += `\n{stats|${d.params} params • ${d.objs} objs}`;
+                        }
+                        if (d.quality !== undefined && d.quality !== null) {
+                            const barClass = d.quality === 100 ? 'barDone' : 'barPend';
+                            html += `\n{${barClass}|${d.quality}% DONE}`;
+                        } else if (d.isDone) {
+                            html += `\n{barSkip|DONE (Inherited)}`;
+                        }
+                        return html;
+                    },
+                    rich: {
+                        title: {
+                            fontSize: 11,
+                            color: isDark ? '#94a3b8' : '#64748b',
+                            padding: [0, 0, 4, 0]
+                        },
+                        winner: {
+                            fontSize: 14,
+                            fontWeight: 'bold',
+                            color: isDark ? '#ffffff' : '#0f172a',
+                            padding: [0, 0, 4, 0]
+                        },
+                        stats: {
+                            fontSize: 11,
+                            color: isDark ? '#cbd5e1' : '#475569',
+                            padding: [4, 0, 8, 0],
+                            fontWeight: '500'
+                        },
+                        barDone: {
+                            backgroundColor: '#10b981',
+                            color: '#ffffff',
+                            borderRadius: 4,
+                            padding: [4, 8],
+                            fontSize: 11,
+                            fontWeight: 'bold',
+                            align: 'center',
+                            width: '100%'
+                        },
+                        barPend: {
+                            backgroundColor: '#f59e0b',
+                            color: '#ffffff',
+                            borderRadius: 4,
+                            padding: [4, 8],
+                            fontSize: 11,
+                            fontWeight: 'bold',
+                            align: 'center',
+                            width: '100%'
+                        },
+                        barSkip: {
+                            backgroundColor: isDark ? '#334155' : '#e2e8f0',
+                            color: isDark ? '#94a3b8' : '#64748b',
+                            borderRadius: 4,
+                            padding: [4, 8],
+                            fontSize: 11,
+                            fontWeight: 'bold',
+                            align: 'center',
+                            width: '100%'
+                        }
+                    }
                 },
                 leaves: {
                     label: {
@@ -176,55 +249,64 @@ export default function ArchitectureTree() {
         ]
     }), [isDark, treeData]);
 
-    // Calculate critical path stats
     const totalDecisions = 108;
     const totalTablesNeeded = 35;
     const seededTables = 5;
-    const doneDecisions = 73; // The rest of the 108 decisions that don't need tables
+    const doneDecisions = 73;
     const tablesToBuild = totalTablesNeeded - seededTables;
 
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // В будущем здесь можно загружать разные деревья в зависимости от id (proxi, choser и т.д.)
     const treeTitle = id === 'choser' ? 'Архитектурное Дерево (Choser)' : 'Архитектурное Дерево (Proxi Messenger)';
 
     return (
-        <div style={{ height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column', background: 'var(--bg)', padding: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div style={{ height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column', background: 'var(--bg-main)', padding: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                     <button 
                         onClick={() => navigate('/trees')} 
-                        style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }}
+                        className="tbtn"
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
                     >
                         ← К списку
                     </button>
                     <div>
-                        <h2 style={{ margin: 0 }}>{treeTitle}</h2>
+                        <h2 style={{ margin: 0, fontSize: '24px', color: 'var(--text-color)' }}>{treeTitle}</h2>
                         <p style={{ margin: '4px 0 0 0', color: 'var(--text-muted)' }}>Визуализация критической магистрали из {totalDecisions} решений</p>
                     </div>
                 </div>
-                <div style={{ display: 'flex', gap: '16px', background: 'var(--surface)', padding: '12px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#8b5cf6' }}>{totalDecisions}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Всего развилок</div>
+                
+                <div style={{ display: 'flex', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '8px' }}>
+                        <div style={{ width: '12px', height: '12px', background: '#10b981', borderRadius: '50%' }}></div>
+                        <span style={{ fontSize: '13px', color: 'var(--text-color)', fontWeight: '500' }}>Магистраль Победителей</span>
                     </div>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#10b981' }}>{seededTables}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Глубоких матриц</div>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#f59e0b' }}>{tablesToBuild}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Матриц в очереди</div>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                        <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#64748b' }}>{doneDecisions}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Узлов DONE</div>
+                    <div style={{ display: 'flex', gap: '16px', background: 'var(--bg-card)', padding: '8px 16px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#8b5cf6' }}>{totalDecisions}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Всего</div>
+                        </div>
+                        <div style={{ width: '1px', background: 'var(--border-color)' }}></div>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#10b981' }}>{seededTables}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Готово</div>
+                        </div>
+                        <div style={{ width: '1px', background: 'var(--border-color)' }}></div>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#f59e0b' }}>{tablesToBuild}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>В очереди</div>
+                        </div>
+                        <div style={{ width: '1px', background: 'var(--border-color)' }}></div>
+                        <div style={{ textAlign: 'center' }}>
+                            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#64748b' }}>{doneDecisions}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>DONE</div>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div style={{ flex: 1, background: 'var(--surface)', borderRadius: '12px', border: '1px solid var(--border)', overflow: 'hidden' }}>
+            <div style={{ flex: 1, background: 'var(--bg-card)', borderRadius: '12px', border: '1px solid var(--border-color)', overflow: 'hidden', boxShadow: isDark ? '0 10px 25px rgba(0,0,0,0.5)' : '0 4px 6px rgba(0,0,0,0.05)' }}>
                 <ReactECharts 
                     option={option} 
                     style={{ height: '100%', width: '100%' }}

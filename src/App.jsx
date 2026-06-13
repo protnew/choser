@@ -129,7 +129,7 @@ function AppContent() {
 
     return (
         <>
-            <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', borderBottom: '1px solid var(--border)' }}>
+            <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', borderBottom: '1px solid var(--border-color)' }}>
                 {/* ЛЕВЫЙ БЛОК: Логотип */}
                 <div onClick={() => navigate('/')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
@@ -140,11 +140,11 @@ function AppContent() {
 
                 {/* ЦЕНТРАЛЬНЫЙ БЛОК: Навигация */}
                 {user && (
-                    <div style={{ display: 'flex', gap: '4px', alignItems: 'center', background: 'var(--surface)', padding: '4px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                        <button onClick={() => navigate('/')} className={`tbtn ${isHome ? 'active' : ''}`} style={{ background: isHome ? 'var(--bg)' : 'transparent', border: 'none', color: isHome ? 'var(--text)' : 'var(--text-muted)' }}>📊 Таблицы</button>
-                        <button onClick={() => navigate('/trees')} className={`tbtn ${location.pathname.startsWith('/trees') ? 'active' : ''}`} style={{ background: location.pathname.startsWith('/trees') ? 'var(--bg)' : 'transparent', border: 'none', color: location.pathname.startsWith('/trees') ? '#10b981' : 'var(--text-muted)' }}>🌳 Деревья</button>
+                    <div style={{ display: 'flex', gap: '4px', alignItems: 'center', background: 'var(--bg-card)', padding: '4px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+                        <button onClick={() => navigate('/')} className={`tbtn ${isHome ? 'active' : ''}`} style={{ background: isHome ? 'var(--bg-main)' : 'transparent', border: 'none', color: isHome ? 'var(--text-color)' : 'var(--text-muted)' }}>📊 Таблицы</button>
+                        <button onClick={() => navigate('/trees')} className={`tbtn ${location.pathname.startsWith('/trees') ? 'active' : ''}`} style={{ background: location.pathname.startsWith('/trees') ? 'var(--bg-main)' : 'transparent', border: 'none', color: location.pathname.startsWith('/trees') ? '#10b981' : 'var(--text-muted)' }}>🌳 Деревья</button>
                         <button onClick={() => setShowResearch(true)} className="tbtn" style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)' }}>🔍 Исследования</button>
-                        <button onClick={() => navigate('/decision')} className={`tbtn ${location.pathname === '/decision' ? 'active' : ''}`} style={{ background: location.pathname === '/decision' ? 'var(--bg)' : 'transparent', border: 'none', color: location.pathname === '/decision' ? '#f59e0b' : 'var(--text-muted)' }}>🏛️ Совет</button>
+                        <button onClick={() => navigate('/decision')} className={`tbtn ${location.pathname === '/decision' ? 'active' : ''}`} style={{ background: location.pathname === '/decision' ? 'var(--bg-main)' : 'transparent', border: 'none', color: location.pathname === '/decision' ? '#f59e0b' : 'var(--text-muted)' }}>🏛️ Совет</button>
                     </div>
                 )}
 
@@ -157,7 +157,7 @@ function AppContent() {
                                 placeholder={t('nav.search')}
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '20px', padding: '6px 16px', color: 'var(--text)', width: '200px' }}
+                                style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', borderRadius: '20px', padding: '6px 16px', color: 'var(--text-color)', width: '200px' }}
                             />
                         </div>
                     )}
@@ -174,14 +174,14 @@ function AppContent() {
                         </div>
                     )}
 
-                    <select value={locale} onChange={e => changeLocale(e.target.value)} style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '6px', padding: '6px', fontSize: '13px', cursor: 'pointer' }}>
+                    <select value={locale} onChange={e => changeLocale(e.target.value)} style={{ background: 'var(--bg-card)', border: '1px solid var(--border-color)', color: 'var(--text-color)', borderRadius: '6px', padding: '6px', fontSize: '13px', cursor: 'pointer' }}>
                         {languages.map(l => (
                             <option key={l.code} value={l.code} style={{ background: '#1e293b', color: '#fff' }}>{l.label}</option>
                         ))}
                     </select>
 
                     {user && user.role === 'admin' && (
-                        <button onClick={() => navigate('/admin')} className="tbtn" style={{ background: 'transparent', border: '1px solid var(--border)', padding: '6px' }} title={t('nav.admin')}>⚙️</button>
+                        <button onClick={() => navigate('/admin')} className="tbtn" style={{ background: 'transparent', border: '1px solid var(--border-color)', padding: '6px' }} title={t('nav.admin')}>⚙️</button>
                     )}
                     
                     <button onClick={toggleTheme} className="tbtn" style={{ background: 'transparent', border: 'none', fontSize: '16px' }} title={t('nav.theme')}>
