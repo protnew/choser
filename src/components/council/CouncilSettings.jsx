@@ -248,39 +248,59 @@ export default function CouncilSettings({
                     </div>
                 </div>
 
-                {/* ── START / STOP BUTTON ── */}
-                <div style={{ padding: '6px 16px 8px' }}>
-                    {running ? (
+            </div>
+
+            {/* ── START / STOP BUTTON — STICKY, OUTSIDE SCROLL ── */}
+            <div style={{
+                padding: '8px 16px',
+                flexShrink: 0,
+                borderTop: `1px solid ${brd}`,
+                background: bg,
+                position: 'sticky',
+                bottom: 0,
+                zIndex: 10,
+            }}>
+                {running ? (
+                    <div style={{ display: 'flex', gap: 8 }}>
                         <button onClick={stopCouncil}
                             style={{
-                                width: '100%', padding: '6px 12px',
+                                flex: 1, padding: '8px 12px',
                                 background: '#ef4444',
                                 color: '#fff', border: 'none', borderRadius: 8,
-                                cursor: 'pointer', fontSize: 13, fontWeight: 700,
-                                minHeight: 36,
+                                cursor: 'pointer', fontSize: 14, fontWeight: 700,
+                                minHeight: 40,
                             }}>
                             ⏹ {t('council.stopCouncil')}
-                            {currentThinking ? ` — ${currentThinking.emoji} ${currentThinking.name}` : ''}
                         </button>
-                    ) : (
-                        <button onClick={runCouncil} disabled={!topic.trim() || !loaded}
-                            style={{
-                                width: '100%', padding: '6px 12px',
-                                background: (topic.trim() && loaded)
-                                    ? 'linear-gradient(135deg, #f59e0b, #ef4444)'
-                                    : (isDark ? '#334155' : '#cbd5e1'),
-                                color: '#fff', border: 'none', borderRadius: 8,
-                                cursor: (topic.trim() && loaded) ? 'pointer' : 'default',
-                                fontSize: 13, fontWeight: 700, transition: 'background 0.3s',
-                                minHeight: 36,
+                        {currentThinking && (
+                            <div style={{
+                                display: 'flex', alignItems: 'center', gap: 4,
+                                padding: '0 10px', background: isDark ? '#1e1b4b' : '#eef2ff',
+                                borderRadius: 8, fontSize: 13, color: '#6366f1',
+                                whiteSpace: 'nowrap',
                             }}>
-                            {!loaded
-                                ? t('council.loadingAgents')
-                                : `🚀 ${t('council.startBtn', { n: enabledCount })}`
-                            }
-                        </button>
-                    )}
-                </div>
+                                {currentThinking.emoji} {currentThinking.name}
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <button onClick={runCouncil} disabled={!topic.trim() || !loaded}
+                        style={{
+                            width: '100%', padding: '8px 12px',
+                            background: (topic.trim() && loaded)
+                                ? '#f59e0b'
+                                : (isDark ? '#334155' : '#cbd5e1'),
+                            color: '#fff', border: 'none', borderRadius: 8,
+                            cursor: (topic.trim() && loaded) ? 'pointer' : 'default',
+                            fontSize: 14, fontWeight: 700, transition: 'background 0.3s',
+                            minHeight: 40,
+                        }}>
+                        {!loaded
+                            ? t('council.loadingAgents')
+                            : `🚀 ${t('council.startBtn', { n: enabledCount })}`
+                        }
+                    </button>
+                )}
             </div>
 
             {/* ── AGENT EDIT MODAL ── */}

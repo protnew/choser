@@ -4,6 +4,9 @@ import { AG_GRID_LOCALE_RU } from '../grid/GridHelpers.jsx';
 import { extractJSON, stripMarkdown } from '../../utils/councilTable.js';
 import { useDecisionGrid } from '../decision/useDecisionGrid.jsx';
 import CouncilProgress from './CouncilProgress.jsx';
+import AgentTableSwitcher from './AgentTableSwitcher.jsx';
+import ChatTab from './ChatTab.jsx';
+import PublishTab from './PublishTab.jsx';
 import { t } from '../../i18n';
 import { useLang } from '../../contexts/LangContext';
 import { ChoserLog } from '../../utils/log';
@@ -123,6 +126,12 @@ export default function CouncilTable({
                     <button onClick={() => setActiveTab('export')} style={tabStyle(activeTab === 'export')}>
                         📤 {t('table.exportTab') || 'Export'}
                     </button>
+                    <button onClick={() => setActiveTab('chat')} style={tabStyle(activeTab === 'chat')}>
+                        💬 {t('table.chat') || 'Чат'}
+                    </button>
+                    <button onClick={() => setActiveTab('publish')} style={tabStyle(activeTab === 'publish')}>
+                        🌐 {t('table.publish') || 'Публикация'}
+                    </button>
                     <div style={{ flex: 1 }} />
                     <div style={{ display: 'flex', gap: 12, fontSize: 12, color: tS, alignItems: 'center', flexShrink: 0 }}>
                         {lastResult.meta && <span>{lastResult.meta.model || '?'} · {((lastResult.meta.total_duration_ms || 0) / 1000).toFixed(1)}s</span>}
@@ -202,7 +211,7 @@ export default function CouncilTable({
                     </div>
                 )}
 
-                {/* TAB: TABLE — EXACT COPY of Grid.jsx ag-grid */}
+                {/* TAB: TABLE — B4: Agent table switcher + AG Grid */}
                 {lastResult && !lastResult.error && activeTab === 'table' && (
                     <div style={{ padding: 20, height: '100%', display: 'flex', flexDirection: 'column' }}>
                         {lastResult.editorSummary && (
@@ -211,46 +220,11 @@ export default function CouncilTable({
                                 <div style={{ fontSize: 13, color: tM, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{stripMarkdown(lastResult.editorSummary)}</div>
                             </div>
                         )}
-                        {comparison && comparison.rows.length > 0 && (
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12, gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                                {saveStatus !== 'saved' ? (
-                                    <button onClick={() => saveAsTable(comparison)} disabled={saveStatus === 'saving'} style={{ padding: '8px 20px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
-                                        {saveStatus === 'saving' ? t('table.saving') : t('table.save')}
-                                    </button>
-                                ) : (
-                                    <span style={{ padding: '8px 20px', background: '#22c55e22', color: '#22c55e', borderRadius: 8, fontSize: 13, fontWeight: 600 }}>{t('table.saved')}</span>
-                                )}
-                                <button onClick={() => shareResult(comparison)} style={{ padding: '8px 20px', background: shareLink ? '#3b82f622' : '#3b82f6', color: shareLink ? '#3b82f6' : '#fff', border: shareLink ? '1px solid #3b82f6' : 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
-                                    {shareLink ? t('table.shared') : t('table.share')}
-                                </button>
-                                <span style={{ fontSize: 12, color: tS, background: bgI, padding: '3px 8px', borderRadius: 4 }}>{t('table.hours24')}</span>
-                                <button onClick={() => { setLastResult(null); setSaveStatus(''); setShareLink(''); sessionStorage.removeItem('choser_last_result'); }} style={{ padding: '6px 14px', background: '#f59e0b22', color: '#f59e0b', border: '1px solid #f59e0b44', borderRadius: 8, cursor: 'pointer', fontSize: 12, fontWeight: 500 }}>{t('table.clear')}</button>
-                            </div>
-                        )}
-                        {comparison && comparison.rows.length > 0 ? (
-                            <div className={isDark ? 'ag-theme-quartz-dark' : 'ag-theme-quartz'} style={{ flex: 1, borderRadius: 12, overflow: 'hidden' }}>
-                                <AgGridReact
-                                    rowData={gridRowData}
-                                    columnDefs={gridColDefs}
-                                    onGridReady={p => { gridApiRef.current = p.api; }}
-                                    localeText={AG_GRID_LOCALE_RU}
-                                    defaultColDef={{
-                                        sortable: true, filter: true, resizable: true,
-                                        floatingFilter: false, enableCellChangeFlash: true,
-                                        wrapHeaderText: true, autoHeaderHeight: true, minWidth: 40
-                                    }}
-                                    rowHeight={30}
-                                    headerHeight={40}
-                                    animateRows={true}
-                                    suppressCellFocus={true}
-                                    enableCellTextSelection={true}
-                                    ensureDomOrder={true}
-                                    pinnedBottomRowData={pinnedBottomRowData}
-                                    getRowStyle={getRowStyle}
-                                    getRowId={p => p.data.id || `row_${p.node.rowIndex}`}
-                                />
-                            </div>
-                        ) : <div style={{ textAlign: 'center', color: tS, padding: 40 }}><div style={{ fontSize: 32, marginBottom: 8 }}>🤷</div>{t('table.noNumericData')}</div>}
+                        {/* B4: Agent table switcher */}
+                        <AgentTableSwitcher
+                            lastResult={lastResult} comparison={comparison}
+                            isDark={isDark} brd={brd} bg={bg} bgI={bgI} tM={tM} tS={tS}
+                        />
                     </div>
                 )}
 
@@ -529,6 +503,22 @@ export default function CouncilTable({
                             </button>
                         </div>
                     </div>
+                )}
+                {/* TAB: CHAT — B7: Full conversation view */}
+                {lastResult && !lastResult.error && activeTab === 'chat' && (
+                    <ChatTab
+                        lastResult={lastResult} topic={topic} topicDesc={topicDesc}
+                        isDark={isDark} brd={brd} bg={bg} bgI={bgI} tM={tM} tS={tS}
+                    />
+                )}
+
+                {/* TAB: PUBLISH — B8: Share results */}
+                {lastResult && !lastResult.error && activeTab === 'publish' && (
+                    <PublishTab
+                        lastResult={lastResult} topic={topic} comparison={comparison}
+                        shareLink={shareLink} shareResult={shareResult}
+                        isDark={isDark} brd={brd} bg={bg} bgI={bgI} tM={tM} tS={tS}
+                    />
                 )}
             </div>
 
