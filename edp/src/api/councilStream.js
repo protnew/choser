@@ -36,7 +36,9 @@ councilStreamRoutes.post('/council/decide-stream', authMiddleware(), async (c) =
     try { body = await c.req.json(); } catch (e) { return c.json({ error: 'Invalid JSON body' }, 400); }
 
     // FIX: Accept both numParams (from frontend) and numParameters (legacy)
-    const { tableId, topic, question, mode: reqMode, numParams, numParameters, numObjects, personaIds, searchMode, templateId } = body;
+    const { tableId, topic, question, mode: reqMode, numParams, numParameters, numObjects, personaIds, searchMode: rawSearchMode, templateId } = body;
+    // B1 FIX: map frontend modes to backend modes: 'single'|'multi' → 'web', 'none' → 'memory'
+    const searchMode = (!rawSearchMode || rawSearchMode === 'none' || rawSearchMode === 'memory') ? 'memory' : 'web';
     const effectiveNumParams = numParams || numParameters || 5;
     const effectiveNumObjects = numObjects || 3;
     const template = getCouncilTemplate(templateId);

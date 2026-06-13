@@ -106,7 +106,7 @@ export default function Grid({ isEmbed }) {
                     setMeta(data.meta);
                     const sortedCols = (data.columns || []).sort((a, b) => (b.weight || 0) - (a.weight || 0));
                     setCols(sortedCols);
-                    const rows = (data.data || []).map(r => { const c = calc(r, sortedCols); return { ...r, _u: c.s, _up: c.up }; });
+                    const rows = (data.data || []).map((r, idx) => { const c = calc(r, sortedCols); return { id: r.id || ('row_' + idx + '_' + Math.random().toString(36).substr(2, 9)), ...r, _u: c.s, _up: c.up }; });
                     setRowData(rows);
                 } else {
                     let endpoint = '/api/tables';
@@ -430,7 +430,7 @@ export default function Grid({ isEmbed }) {
         tableSearch, setTableSearch, textWrapped, isWidthOptimized, isOptimalActive, autoHeight,
         setEbmMode, setShowEbmTab, onAddRow, onAddCol, onSave, onDeleteSelected, onDeleteTable,
         onExportToPNG, toggleTextWrap, autoSizeCols, optimizeView, setAutoHeight,
-        setShowHistory, showHistory, gridApi, tableId, setShowCouncil, isEmbed
+        setShowHistory, showHistory, gridApi, tableId, setShowCouncil, isEmbed, cols
     };
 
     return (

@@ -10,6 +10,26 @@ import { ChoserLog } from '../../utils/log';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 
+/* ── Export helpers (B9) ── */
+function generateMarkdown(topic, lastResult, comparison) {
+    const lines = [`# ${topic || 'Council Report'}`, ``, `📅 ${new Date().toLocaleString('ru')}`, ``];
+    if (lastResult.consensus?.recommendation) lines.push(`**Рекомендация:** ${lastResult.consensus.recommendation}`, ``);
+    if (comparison?.columns?.length && comparison?.rows?.length) {
+        lines.push(`| Объект | ${comparison.columns.map(c => c.title).join(' | ')} | Score |`, `|---|${comparison.columns.map(() => '---').join(' | ')}|---|`);
+        for (const r of comparison.rows) {
+            lines.push(`| ${String(r.name || '—')} | ${comparison.columns.map(c => String(r[c.key]?.grade ?? '—')).join(' | ')} | ${(r._u || 0).toFixed(0)} |`);
+        }
+    }
+    lines.push(``, `---`, `**Agents:** ${(lastResult.votes || []).map(v => `${v.emoji} ${v.name}: ${v.recommendation || '—'}`).join(', ')}`);
+    return lines.join('\n');
+}
+function generateCSV(comparison) {
+    if (!comparison?.columns?.length || !comparison?.rows?.length) return '';
+    const header = ['Объект', ...comparison.columns.map(c => c.title), 'Score'].join(',');
+    const rows = comparison.rows.map(r => [String(r.name || ''), ...comparison.columns.map(c => String(r[c.key]?.grade ?? '')), String((r._u || 0).toFixed(0))].join(','));
+    return [header, ...rows].join('\n');
+}
+
 export default function CouncilTable({
     lastResult, comparison, activeTab, setActiveTab,
     saveStatus, shareLink, saveAsTable, shareResult,
@@ -73,28 +93,38 @@ export default function CouncilTable({
     const { gridColDefs, gridRowData, pinnedBottomRowData, getRowStyle } = useDecisionGrid(comparison, onCellExpand);
 
     const tabStyle = (active) => ({
-        padding: '10px 20px', border: 'none',
+        padding: '8px 14px', border: 'none',
         borderBottom: active ? '3px solid #3b82f6' : '3px solid transparent',
         background: 'none', color: active ? tM : tS,
-        cursor: 'pointer', fontSize: 13, fontWeight: active ? 700 : 400,
+        cursor: 'pointer', fontSize: 12, fontWeight: active ? 700 : 400,
+        whiteSpace: 'nowrap', transition: 'all 0.15s',
     });
 
     return (
         <div style={{ flex: 1, minWidth: 300, display: 'flex', flexDirection: 'column', background: bg }}>
-            {/* TABS */}
+            {/* TABS — B5: removed Verdict, B6: rich 10 tabs */}
             {lastResult && (
-                <div style={{ display: 'flex', borderBottom: `1px solid ${brd}`, background: bgI, alignItems: 'center', paddingRight: 16 }}>
+                <div style={{ display: 'flex', borderBottom: `1px solid ${brd}`, background: bgI, alignItems: 'center', paddingRight: 16, overflowX: 'auto' }}>
                     <button onClick={() => setActiveTab('table')} style={tabStyle(activeTab === 'table')}>
-                        {t('table.tab')} {comparison ? <span style={{ marginLeft: 4, padding: '1px 6px', borderRadius: 10, background: '#3b82f6', color: '#fff', fontSize: 12 }}>{comparison.rows.length}</span> : ''}
+                        📊 {t('table.tab')}
                     </button>
-                    <button onClick={() => setActiveTab('verdict')} style={tabStyle(activeTab === 'verdict')}>
-                        {t('table.verdict')} {lastResult.votes ? <span style={{ marginLeft: 4, padding: '1px 6px', borderRadius: 10, background: '#22c55e', color: '#fff', fontSize: 12 }}>{lastResult.votes.length}</span> : ''}
+                    <button onClick={() => setActiveTab('agents')} style={tabStyle(activeTab === 'agents')}>
+                        👥 {t('table.agents') || 'Agents'}
                     </button>
                     <button onClick={() => setActiveTab('logs')} style={tabStyle(activeTab === 'logs')}>
-                        {t('table.logs')} {lastResult.votes ? <span style={{ marginLeft: 4, padding: '1px 6px', borderRadius: 10, background: '#f59e0b', color: '#fff', fontSize: 12 }}>{lastResult.votes.length}</span> : ''}
+                        🔍 {t('table.logs')}
+                    </button>
+                    <button onClick={() => setActiveTab('sources')} style={tabStyle(activeTab === 'sources')}>
+                        🔗 {t('table.sourcesTab') || 'Sources'}
+                    </button>
+                    <button onClick={() => setActiveTab('description')} style={tabStyle(activeTab === 'description')}>
+                        📝 {t('table.descriptionTab') || 'Description'}
+                    </button>
+                    <button onClick={() => setActiveTab('export')} style={tabStyle(activeTab === 'export')}>
+                        📤 {t('table.exportTab') || 'Export'}
                     </button>
                     <div style={{ flex: 1 }} />
-                    <div style={{ display: 'flex', gap: 12, fontSize: 12, color: tS, alignItems: 'center' }}>
+                    <div style={{ display: 'flex', gap: 12, fontSize: 12, color: tS, alignItems: 'center', flexShrink: 0 }}>
                         {lastResult.meta && <span>{lastResult.meta.model || '?'} · {((lastResult.meta.total_duration_ms || 0) / 1000).toFixed(1)}s</span>}
                         {lastResult.tokens && <span>🔢 {((lastResult.tokens.input || 0) + (lastResult.tokens.output || 0))?.toLocaleString()} tok</span>}
                         {lastResult.consensus?.recommendation && String(lastResult.consensus.recommendation) !== 'insufficient_data' && (
@@ -113,10 +143,10 @@ export default function CouncilTable({
                         <span>{typeof councilWarning === 'string' ? councilWarning : councilWarning?.message || JSON.stringify(councilWarning)}</span>
                     </div>
                 )}
-                {councilRecommendation && !lastResult && (
+                {councilRecommendation && (
                     <div style={{ padding: '10px 20px', background: isDark ? '#052e16' : '#f0fdf4', borderBottom: `1px solid ${isDark ? '#166534' : '#86efac'}`, color: isDark ? '#ffffff' : '#000000', fontSize: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
                         <span>💡</span>
-                        <span>{typeof councilRecommendation === 'string' ? councilRecommendation : councilRecommendation?.message || (councilRecommendation?.suggestions || []).join('. ') || JSON.stringify(councilRecommendation)}</span>
+                        <span>{typeof councilRecommendation === 'string' ? councilRecommendation : (councilRecommendation?.suggestions || []).join('. ') || JSON.stringify(councilRecommendation)}</span>
                     </div>
                 )}
                 {!lastResult && !running && (
@@ -224,38 +254,39 @@ export default function CouncilTable({
                     </div>
                 )}
 
-                {/* TAB: VERDICT */}
-                {lastResult && !lastResult.error && activeTab === 'verdict' && (
-                    <div style={{ padding: 20 }}>
+                {/* TAB: AGENTS — B4: Individual agent tables */}
+                {lastResult && !lastResult.error && activeTab === 'agents' && (
+                    <div style={{ padding: 16 }}>
                         {lastResult.consensus?.recommendation && String(lastResult.consensus.recommendation) !== 'insufficient_data' && (
-                            <div style={{ border: '2px solid #22c55e', borderRadius: 12, padding: 20, marginBottom: 20, background: isDark ? '#052e16' : '#f0fdf4' }}>
-                                <div style={{ fontSize: 16, fontWeight: 700, color: tM, marginBottom: 8 }}>{t('table.generalRecommendation')}</div>
-                                <div style={{ fontSize: 18, color: '#22c55e', fontWeight: 700 }}>{String(lastResult.consensus.recommendation)}</div>
+                            <div style={{ border: '2px solid #22c55e', borderRadius: 12, padding: 16, marginBottom: 16, background: isDark ? '#052e16' : '#f0fdf4' }}>
+                                <div style={{ fontSize: 14, fontWeight: 700, color: tM, marginBottom: 6 }}>{t('table.generalRecommendation')}</div>
+                                <div style={{ fontSize: 16, color: '#22c55e', fontWeight: 700 }}>{String(lastResult.consensus.recommendation)}</div>
                             </div>
                         )}
                         {lastResult.consensus?.recommendations && (
-                            <div style={{ border: `1px solid ${brd}`, borderRadius: 12, padding: 16, marginBottom: 20, background: bgI }}>
-                                <div style={{ fontSize: 14, fontWeight: 700, color: tM, marginBottom: 12 }}>{t('table.agentVoting')}</div>
+                            <div style={{ border: `1px solid ${brd}`, borderRadius: 12, padding: 14, marginBottom: 16, background: bgI }}>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: tM, marginBottom: 10 }}>{t('table.agentVoting')}</div>
                                 {Object.entries(lastResult.consensus.recommendations).sort((a, b) => b[1] - a[1]).map(([r, w]) => (
-                                    <div key={r} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                                        <div style={{ width: 140, fontSize: 12, color: tM, fontWeight: 500, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r}</div>
-                                        <div style={{ flex: 1, height: 18, background: isDark ? '#1e293b' : '#f1f5f9', borderRadius: 4, overflow: 'hidden' }}>
-                                            <div style={{ width: `${Math.round(w * 30)}px`, height: '100%', background: 'linear-gradient(90deg, #3b82f6, #6366f1)', borderRadius: 4, minWidth: 4 }} />
+                                    <div key={r} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                        <div style={{ width: 120, fontSize: 12, color: tM, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r}</div>
+                                        <div style={{ flex: 1, height: 14, background: isDark ? '#1e293b' : '#f1f5f9', borderRadius: 3, overflow: 'hidden' }}>
+                                            <div style={{ width: `${Math.round(w * 30)}px`, height: '100%', background: 'linear-gradient(90deg, #3b82f6, #6366f1)', borderRadius: 3, minWidth: 4 }} />
                                         </div>
                                         <div style={{ fontSize: 12, color: tS, width: 40, textAlign: 'right' }}>{w.toFixed(1)}</div>
                                     </div>
                                 ))}
                             </div>
                         )}
-                        <div style={{ fontSize: 14, fontWeight: 700, color: tM, marginBottom: 12 }}>{t('table.eachAgentVote')}</div>
+                        <div style={{ fontSize: 13, fontWeight: 700, color: tM, marginBottom: 10 }}>{t('table.eachAgentVote')}</div>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                             {(lastResult.votes || []).map((v, i) => {
                                 const j = extractJSON(v.response);
+                                const agentScores = v.scores || j?.scores;
                                 return (
                                     <div key={i} style={{ border: `1px solid ${brd}`, borderRadius: 10, overflow: 'hidden', background: bg }}>
                                         <div style={{ padding: '10px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: bgI }}>
                                             <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                <span style={{ fontSize: 20 }}>{v.emoji}</span>
+                                                <span style={{ fontSize: 18 }}>{v.emoji}</span>
                                                 <strong style={{ color: tM }}>{v.name}</strong>
                                                 <span style={{ fontSize: 12, color: v.recommendation && v.recommendation !== 'insufficient_data' ? '#22c55e' : tS, fontWeight: 600 }}>
                                                     → {v.recommendation || '—'}
@@ -265,8 +296,45 @@ export default function CouncilTable({
                                                 {v.confidence ? `conf: ${v.confidence}/10` : ''} {v.score ? `score: ${v.score}` : ''}
                                             </span>
                                         </div>
+                                        {agentScores && typeof agentScores === 'object' && (
+                                            <div style={{ padding: '8px 14px', overflowX: 'auto' }}>
+                                                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                                                    <thead>
+                                                        <tr>
+                                                            <th style={{ padding: 4, borderBottom: `1px solid ${brd}`, textAlign: 'left', color: tS, fontWeight: 600 }}>{t('council.parametersLabel')}</th>
+                                                            {Object.keys(agentScores).map(obj => (
+                                                                <th key={obj} style={{ padding: 4, borderBottom: `1px solid ${brd}`, textAlign: 'center', color: tM, fontWeight: 600, minWidth: 80 }}>{obj}</th>
+                                                            ))}
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {(() => {
+                                                            const params = new Set();
+                                                            for (const obj of Object.values(agentScores)) {
+                                                                if (typeof obj === 'object') for (const p of Object.keys(obj)) params.add(p);
+                                                            }
+                                                            return [...params].map(param => (
+                                                                <tr key={param}>
+                                                                    <td style={{ padding: 3, borderBottom: `1px solid ${brd}`, color: tS, fontWeight: 500 }}>{param}</td>
+                                                                    {Object.entries(agentScores).map(([obj, params]) => {
+                                                                        const val = typeof params === 'object' ? params[param] : undefined;
+                                                                        const grade = typeof val === 'object' ? val.grade : (typeof val === 'number' ? val : '—');
+                                                                        const bgc = typeof grade === 'number' ? (grade >= 7 ? '#22c55e22' : grade >= 4 ? '#f59e0b22' : '#ef444422') : 'transparent';
+                                                                        return (
+                                                                            <td key={obj} style={{ padding: 3, borderBottom: `1px solid ${brd}`, textAlign: 'center', background: bgc, borderRadius: 3 }}>
+                                                                                <span style={{ fontWeight: 700, color: tM }}>{grade}</span>
+                                                                            </td>
+                                                                        );
+                                                                    })}
+                                                                </tr>
+                                                            ));
+                                                        })()}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        )}
                                         {j?.analysis && (
-                                            <div style={{ padding: '10px 14px', fontSize: 12, lineHeight: 1.6, color: tS, borderTop: `1px solid ${brd}`, whiteSpace: 'pre-wrap' }}>
+                                            <div style={{ padding: '8px 14px', fontSize: 12, lineHeight: 1.6, color: tS, borderTop: `1px solid ${brd}`, whiteSpace: 'pre-wrap' }}>
                                                 {j.analysis}
                                             </div>
                                         )}
@@ -314,6 +382,152 @@ export default function CouncilTable({
                                 <strong>Trace:</strong><br />{lastResult.debug.map((d, i) => `${d.persona}: ${d.status} ${d.ms}ms (${d.provider || '?'}/${d.model || '?'})`).join(' → ')}
                             </div>
                         )}
+                    </div>
+                )}
+
+                {/* TAB: SOURCES — B6: All links/references */}
+                {lastResult && !lastResult.error && activeTab === 'sources' && (
+                    <div style={{ padding: 16 }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: tM, marginBottom: 12 }}>📎 {t('table.sources')}</div>
+                        {(lastResult.votes || []).flatMap((v, vi) => {
+                            const j = extractJSON(v.response);
+                            const voteLinks = v.links || j?.links || {};
+                            const webLinks = v.webResults || [];
+                            const allLinks = [];
+                            // Links from LLM response
+                            if (typeof voteLinks === 'object' && voteLinks !== null) {
+                                for (const [name, url] of Object.entries(voteLinks)) {
+                                    if (typeof url === 'string' && url.startsWith('http')) allLinks.push({ agent: v.name, emoji: v.emoji, name, url });
+                                }
+                            }
+                            // Web search results
+                            if (Array.isArray(webLinks)) {
+                                for (const wl of webLinks) {
+                                    if (wl.url) allLinks.push({ agent: v.name, emoji: v.emoji, name: wl.title || wl.url, url: wl.url });
+                                }
+                            }
+                            // Sources from scores
+                            const scores = v.scores || j?.scores || {};
+                            if (typeof scores === 'object') {
+                                for (const [obj, params] of Object.entries(scores)) {
+                                    if (typeof params === 'object') {
+                                        for (const [param, val] of Object.entries(params)) {
+                                            if (typeof val === 'object' && val.source && String(val.source).startsWith('http')) {
+                                                allLinks.push({ agent: v.name, emoji: v.emoji, name: `${obj} → ${param}`, url: val.source });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            return allLinks.map((link, li) => (
+                                <div key={`${vi}-${li}`} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: `1px solid ${brd}` }}>
+                                    <span style={{ fontSize: 14 }}>{link.emoji}</span>
+                                    <span style={{ fontSize: 12, color: tS, minWidth: 60 }}>{link.agent}</span>
+                                    <span style={{ fontSize: 12, color: tM, flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{link.name}</span>
+                                    <a href={link.url} target="_blank" rel="noopener" style={{ fontSize: 12, color: '#3b82f6', maxWidth: 300, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{link.url}</a>
+                                </div>
+                            ));
+                        })}
+                        {(lastResult.votes || []).flatMap(v => {
+                            const j = extractJSON(v.response);
+                            const voteLinks = v.links || j?.links || {};
+                            const webLinks = v.webResults || [];
+                            const scores = v.scores || j?.scores || {};
+                            let count = 0;
+                            if (typeof voteLinks === 'object') count += Object.values(voteLinks).filter(u => typeof u === 'string' && u.startsWith('http')).length;
+                            if (Array.isArray(webLinks)) count += webLinks.filter(w => w.url).length;
+                            return [count];
+                        }).reduce((a, b) => a + b, 0) === 0 && (
+                            <div style={{ textAlign: 'center', color: tS, padding: 40, fontSize: 13 }}>
+                                🔍 {t('council.noSources') || 'No sources found. Try Web mode for real URLs.'}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* TAB: DESCRIPTION — B6: AI-generated summary */}
+                {lastResult && !lastResult.error && activeTab === 'description' && (
+                    <div style={{ padding: 20 }}>
+                        {lastResult.editorSummary ? (
+                            <div>
+                                <div style={{ fontSize: 14, fontWeight: 700, color: tM, marginBottom: 12 }}>📝 {t('table.editorSummary')}</div>
+                                <div style={{ fontSize: 13, lineHeight: 1.8, color: tM, whiteSpace: 'pre-wrap', padding: 16, background: bgI, borderRadius: 12, border: `1px solid ${brd}` }}>
+                                    {stripMarkdown(lastResult.editorSummary)}
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                <div style={{ fontSize: 14, fontWeight: 700, color: tM, marginBottom: 12 }}>📝 {t('table.descriptionTab') || 'Description'}</div>
+                                {lastResult.consensus?.recommendation && (
+                                    <div style={{ padding: 16, background: bgI, borderRadius: 12, border: `1px solid ${brd}`, fontSize: 13, lineHeight: 1.7, color: tM }}>
+                                        <strong>{t('table.generalRecommendation')}:</strong> {String(lastResult.consensus.recommendation)}
+                                        <br /><br />
+                                        {(lastResult.votes || []).map(v => `${v.emoji} ${v.name}: ${v.recommendation || '—'}`).join('\n')}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                        {/* C5: SEO/AEO — TL;DR block */}
+                        {comparison && (
+                            <div style={{ marginTop: 16, padding: 14, background: isDark ? '#1e293b' : '#f8fafc', borderRadius: 8, border: `1px solid ${brd}` }}>
+                                <div style={{ fontSize: 12, fontWeight: 700, color: tS, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 }}>TL;DR</div>
+                                <div style={{ fontSize: 13, lineHeight: 1.6, color: tM }}>
+                                    {comparison.rows.length > 0 && `Лидер: ${String(comparison.rows[0].name || '—').replace('👑 ', '')}. `}
+                                    {comparison.rows.length > 1 && `Альтернативы: ${comparison.rows.slice(1, 3).map(r => String(r.name || '—')).join(', ')}. `}
+                                    Критериев: {comparison.columns.length}. Оценка: {(comparison.rows[0]?._u || 0).toFixed(0)}/1000.
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {/* TAB: EXPORT — B9: Export verification */}
+                {lastResult && !lastResult.error && activeTab === 'export' && (
+                    <div style={{ padding: 20 }}>
+                        <div style={{ fontSize: 14, fontWeight: 700, color: tM, marginBottom: 16 }}>📤 {t('table.exportTab') || 'Export'}</div>
+                        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                            <button onClick={() => {
+                                const el = document.querySelector('[data-report]');
+                                if (el) { navigator.clipboard.writeText(el.innerText); }
+                                // Fallback: generate from data
+                                if (!el && comparison) {
+                                    const md = generateMarkdown(topic, lastResult, comparison);
+                                    navigator.clipboard.writeText(md);
+                                }
+                            }} style={{ padding: '10px 20px', background: '#3b82f6', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+                                📋 Copy Report
+                            </button>
+                            <button onClick={() => {
+                                if (!comparison) return;
+                                const md = generateMarkdown(topic, lastResult, comparison);
+                                const blob = new Blob([md], { type: 'text/markdown' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a'); a.href = url; a.download = `choser-${Date.now()}.md`; a.click();
+                                URL.revokeObjectURL(url);
+                            }} style={{ padding: '10px 20px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+                                📝 Markdown
+                            </button>
+                            <button onClick={() => {
+                                if (!comparison) return;
+                                const csv = generateCSV(comparison);
+                                const blob = new Blob([csv], { type: 'text/csv' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a'); a.href = url; a.download = `choser-${Date.now()}.csv`; a.click();
+                                URL.revokeObjectURL(url);
+                            }} style={{ padding: '10px 20px', background: '#f59e0b', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+                                📊 CSV
+                            </button>
+                            <button onClick={() => {
+                                if (!comparison) return;
+                                const json = JSON.stringify({ topic, comparison, consensus: lastResult.consensus, votes: (lastResult.votes || []).map(v => ({ name: v.name, emoji: v.emoji, recommendation: v.recommendation, scores: v.scores })) }, null, 2);
+                                const blob = new Blob([json], { type: 'application/json' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a'); a.href = url; a.download = `choser-${Date.now()}.json`; a.click();
+                                URL.revokeObjectURL(url);
+                            }} style={{ padding: '10px 20px', background: '#8b5cf6', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>
+                                📦 JSON
+                            </button>
+                        </div>
                     </div>
                 )}
             </div>

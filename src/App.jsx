@@ -9,6 +9,8 @@ import CreateModal from './components/CreateModal';
 import ImportModal from './components/ImportModal';
 import AboutModal from './components/AboutModal';
 import EmbedView from './components/EmbedView';
+import TreesList from './components/TreesList';
+import ArchitectureTree from './components/ArchitectureTree';
 // ChatBot removed per user request
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AppProvider, useApp } from './contexts/AppContext';
@@ -127,65 +129,63 @@ function AppContent() {
 
     return (
         <>
-            <div className="header">
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
-                    <div onClick={() => navigate('/')} style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
-                        <h1 style={{ margin: 0, fontSize: '1.3em' }}>{t('app.title')}</h1>
-                        <span style={{ fontSize: '0.6em', color: 'inherit', fontWeight: 400 }}>{t('app.subtitle')}</span>
+            <div className="header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', borderBottom: '1px solid var(--border)' }}>
+                {/* ЛЕВЫЙ БЛОК: Логотип */}
+                <div onClick={() => navigate('/')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.1 }}>
+                        <h1 style={{ margin: 0, fontSize: '1.3em', background: 'linear-gradient(90deg, #3b82f6, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{t('app.title')}</h1>
+                        <span style={{ fontSize: '0.6em', color: 'var(--text-muted)', fontWeight: 500, letterSpacing: '0.5px' }}>{t('app.subtitle')}</span>
                     </div>
+                </div>
 
-                    {!isHome && (
-                        <button onClick={() => navigate('/')} className="tbtn">{t('nav.back')}</button>
-                    )}
+                {/* ЦЕНТРАЛЬНЫЙ БЛОК: Навигация */}
+                {user && (
+                    <div style={{ display: 'flex', gap: '4px', alignItems: 'center', background: 'var(--surface)', padding: '4px', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                        <button onClick={() => navigate('/')} className={`tbtn ${isHome ? 'active' : ''}`} style={{ background: isHome ? 'var(--bg)' : 'transparent', border: 'none', color: isHome ? 'var(--text)' : 'var(--text-muted)' }}>📊 Таблицы</button>
+                        <button onClick={() => navigate('/trees')} className={`tbtn ${location.pathname.startsWith('/trees') ? 'active' : ''}`} style={{ background: location.pathname.startsWith('/trees') ? 'var(--bg)' : 'transparent', border: 'none', color: location.pathname.startsWith('/trees') ? '#10b981' : 'var(--text-muted)' }}>🌳 Деревья</button>
+                        <button onClick={() => setShowResearch(true)} className="tbtn" style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)' }}>🔍 Исследования</button>
+                        <button onClick={() => navigate('/decision')} className={`tbtn ${location.pathname === '/decision' ? 'active' : ''}`} style={{ background: location.pathname === '/decision' ? 'var(--bg)' : 'transparent', border: 'none', color: location.pathname === '/decision' ? '#f59e0b' : 'var(--text-muted)' }}>🏛️ Совет</button>
+                    </div>
+                )}
 
+                {/* ПРАВЫЙ БЛОК: Инструменты, Поиск и Профиль */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     {isHome && (
-                        <input
-                            type="text"
-                            id="search"
-                            placeholder={t('nav.search')}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    )}
-
-                    <DevTools />
-
-                    {user && isHome && (
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                            <div data-new-dropdown style={{ position: 'relative' }}>
-                                <button onClick={(e) => { e.stopPropagation(); setShowNewDropdown(v => !v); }} className="tbtn primary">{t('nav.newTable')} ▾</button>
-                                {showNewDropdown && (
-                                    <div style={{ position: 'absolute', top: '100%', left: 0, marginTop: 4, background: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, overflow: 'hidden', zIndex: 100, minWidth: 160, boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
-                                        <button onClick={() => { setShowNewDropdown(false); setShowCreate(true); }} style={{ display: 'block', width: '100%', padding: '10px 16px', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', textAlign: 'left', fontSize: 13 }}>{t('nav.newTableMenu')}</button>
-                                        <button onClick={() => { setShowNewDropdown(false); setShowImport(true); }} style={{ display: 'block', width: '100%', padding: '10px 16px', background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', textAlign: 'left', fontSize: 13, borderTop: '1px solid rgba(255,255,255,0.1)' }}>{t('nav.importJsonMenu')}</button>
-                                    </div>
-                                )}
-                            </div>
-                            <button onClick={() => setShowResearch(true)} className="tbtn" style={{ background: 'linear-gradient(135deg, #7c3aed, #3b82f6)', color: 'white', border: 'none' }}>{t('nav.research')}</button>
-                            <button onClick={() => setShowAbout(true)} className="tbtn" style={{ background: 'transparent', color: 'white', border: '1px solid rgba(255,255,255,0.3)', marginLeft: '10px' }}>{t('nav.about')}</button>
-                            <button onClick={() => navigate('/decision')} className="tbtn" style={{ background: 'linear-gradient(135deg, #f59e0b, #ef4444)', color: 'white', border: 'none' }}>{t('nav.council')}</button>
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                type="text"
+                                placeholder={t('nav.search')}
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '20px', padding: '6px 16px', color: 'var(--text)', width: '200px' }}
+                            />
                         </div>
                     )}
 
-                    {user && user.role === 'admin' && !isAdminView && (
-                        <button onClick={() => navigate('/admin')} className="tbtn" style={{ marginLeft: '10px' }}>{t('nav.admin')}</button>
+                    {user && (
+                        <div data-new-dropdown style={{ position: 'relative' }}>
+                            <button onClick={(e) => { e.stopPropagation(); setShowNewDropdown(v => !v); }} className="tbtn" style={{ background: '#3b82f6', color: 'white', border: 'none', borderRadius: '20px', padding: '6px 16px' }}>{t('nav.newTable')} ▾</button>
+                            {showNewDropdown && (
+                                <div style={{ position: 'absolute', top: '100%', right: 0, marginTop: 4, background: '#1e293b', border: '1px solid rgba(255,255,255,0.15)', borderRadius: 8, overflow: 'hidden', zIndex: 100, minWidth: 160, boxShadow: '0 8px 24px rgba(0,0,0,0.4)' }}>
+                                    <button onClick={() => { setShowNewDropdown(false); setShowCreate(true); }} style={{ display: 'block', width: '100%', padding: '10px 16px', background: 'none', border: 'none', color: 'white', cursor: 'pointer', textAlign: 'left', fontSize: 13 }}>{t('nav.newTableMenu')}</button>
+                                    <button onClick={() => { setShowNewDropdown(false); setShowImport(true); }} style={{ display: 'block', width: '100%', padding: '10px 16px', background: 'none', border: 'none', color: 'white', cursor: 'pointer', textAlign: 'left', fontSize: 13, borderTop: '1px solid rgba(255,255,255,0.1)' }}>{t('nav.importJsonMenu')}</button>
+                                </div>
+                            )}
+                        </div>
                     )}
-                </div>
-                <div id="authContainer" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    {/* Language Switcher */}
-                    <select value={locale} onChange={e => changeLocale(e.target.value)} style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: 'white', borderRadius: '6px', padding: '4px 6px', fontSize: '12px', cursor: 'pointer' }}>
+
+                    <select value={locale} onChange={e => changeLocale(e.target.value)} style={{ background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)', borderRadius: '6px', padding: '6px', fontSize: '13px', cursor: 'pointer' }}>
                         {languages.map(l => (
-                            <option key={l.code} value={l.code} style={{ background: '#1e293b', color: '#fff' }}>{l.flag} {l.label}</option>
+                            <option key={l.code} value={l.code} style={{ background: '#1e293b', color: '#fff' }}>{l.label}</option>
                         ))}
                     </select>
-                    <button onClick={toggleUiMode} className="tbtn" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: 'white', padding: '4px 8px' }} title={t('nav.uiMode')}>
-                        🎨
-                    </button>
-                    <button onClick={toggleTheme} className="tbtn" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: 'white', padding: '4px 8px' }} title={t('nav.theme')}>
+
+                    {user && user.role === 'admin' && (
+                        <button onClick={() => navigate('/admin')} className="tbtn" style={{ background: 'transparent', border: '1px solid var(--border)', padding: '6px' }} title={t('nav.admin')}>⚙️</button>
+                    )}
+                    
+                    <button onClick={toggleTheme} className="tbtn" style={{ background: 'transparent', border: 'none', fontSize: '16px' }} title={t('nav.theme')}>
                         {theme === 'light' ? '🌙' : '☀️'}
-                    </button>
-                    <button onClick={toggleDisplayMode} className="tbtn" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.3)', color: 'white', padding: '4px 8px' }} title={t('nav.viewMode')}>
-                        {displayMode === 'grid' ? '📱' : '📊'}
                     </button>
                     <Auth />
                 </div>
@@ -209,6 +209,8 @@ function AppContent() {
                         <Route path="/admin/10-sensitivity-extended" element={user?.role === 'admin' ? <SensitivityExtended /> : <Navigate to="/" />} />
                         <Route path="/admin/11-distributions" element={user?.role === 'admin' ? <DistributionAnalysis /> : <Navigate to="/" />} />
                         <Route path="/decision" element={user ? <DecisionPage /> : <Navigate to="/" />} />
+                        <Route path="/trees" element={<TreesList />} />
+                        <Route path="/trees/:id" element={<ArchitectureTree />} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </Suspense>

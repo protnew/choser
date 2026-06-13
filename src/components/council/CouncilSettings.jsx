@@ -126,23 +126,29 @@ export default function CouncilSettings({
                         </div>
                     </div>
 
-                    {/* Tokens / Time */}
+                    {/* Tokens / Time — C3: numeric inputs */}
                     <div style={{ display: 'flex', gap: 8 }}>
                         <div>
                             <div style={{ fontSize: 12, color: tS }}>
                                 {t('council.tokensLabel')} {tokenBudget ? `${Math.round(tokenBudget / 1000)}K` : '80K'}
                             </div>
-                            <input type="range" min="20000" max="200000" step="10000"
-                                value={tokenBudget || 80000} onChange={e => setTokenBudget(parseInt(e.target.value))}
-                                style={{ width: 80, accentColor: '#3b82f6' }} />
+                            <input type="number" min="20" max="200" step="10"
+                                value={Math.round((tokenBudget || 80000) / 1000)}
+                                onChange={e => setTokenBudget(parseInt(e.target.value) * 1000 || 80000)}
+                                placeholder="80"
+                                style={{ ...inp, width: 70, height: 24, marginBottom: 0, fontSize: 12 }} />
+                            <span style={{ fontSize: 12, color: tS, marginLeft: 2 }}>K</span>
                         </div>
                         <div>
                             <div style={{ fontSize: 12, color: tS }}>
                                 {t('council.timeLabel')} {maxDuration || 15} min
                             </div>
-                            <input type="range" min="5" max="30" step="5"
-                                value={maxDuration || 15} onChange={e => setMaxDuration(parseInt(e.target.value))}
-                                style={{ width: 80, accentColor: '#3b82f6' }} />
+                            <input type="number" min="5" max="30" step="5"
+                                value={maxDuration || 15}
+                                onChange={e => setMaxDuration(parseInt(e.target.value) || 15)}
+                                placeholder="15"
+                                style={{ ...inp, width: 55, height: 24, marginBottom: 0, fontSize: 12 }} />
+                            <span style={{ fontSize: 12, color: tS, marginLeft: 2 }}>min</span>
                         </div>
                     </div>
                 </div>

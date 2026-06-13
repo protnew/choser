@@ -5,9 +5,12 @@ export default function GridToolbar({
     tableSearch, setTableSearch, textWrapped, isWidthOptimized, isOptimalActive, autoHeight,
     setEbmMode, setShowEbmTab, onAddRow, onAddCol, onSave, onDeleteSelected, onDeleteTable,
     onExportToPNG, toggleTextWrap, autoSizeCols, optimizeView, setAutoHeight,
-    setShowHistory, showHistory, gridApi, tableId, setShowCouncil, isEmbed
+    setShowHistory, showHistory, gridApi, tableId, setShowCouncil, isEmbed, cols
 }) {
     if (!tableId || !meta || isEmbed) return null;
+
+    const totalWeight = Math.round((cols || []).reduce((sum, col) => sum + (Number(col.weight) || 0), 0));
+    const weightIs100 = totalWeight === 100;
 
     return (
         <div style={{ padding: '4px 8px', borderBottom: '1px solid #1e293b33', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'nowrap', gap: '8px', overflowX: 'auto' }}>
@@ -64,6 +67,18 @@ export default function GridToolbar({
                 )}
                 <button onClick={() => { setShowHistory(!showHistory); }} className={`tbtn ${showHistory ? 'tbtn-blue' : ''}`}>🕒 История</button>
                 {isDirty && <span style={{ color: theme === 'dark' ? '#fcd34d' : '#ea580c', fontSize: '12px', display: 'flex', alignItems: 'center', gap: '4px', background: theme === 'dark' ? '#78350f' : '#ffedd5', padding: '2px 6px', borderRadius: '4px' }}>⚠️ {isDirty ? 'Сохранить' : ''}</span>}
+                {cols && cols.length > 0 && !showEbmTab && !isHome && (
+                    <span style={{ 
+                        fontSize: '12px', 
+                        padding: '2px 6px', 
+                        borderRadius: '4px', 
+                        background: weightIs100 ? 'rgba(34,197,94,0.1)' : 'rgba(234,179,8,0.2)',
+                        color: weightIs100 ? '#166534' : '#854d0e',
+                        fontWeight: '500'
+                    }} title="Сумма весов всех параметров (оптимально 100%)">
+                        Вес: {totalWeight}%
+                    </span>
+                )}
             </div>
             <div style={{ display: 'flex', gap: '4px', alignItems: 'center', whiteSpace: 'nowrap' }}>
                 <button onClick={() => gridApi?.exportDataAsCsv()} className="tbtn tbtn-blue" title="CSV">CSV</button>

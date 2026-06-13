@@ -291,10 +291,16 @@ export function fmtDuration(ms) {
   return `${m}m ${sec}s`;
 }
 
-/** Available languages */
+/** Available languages (Top 10) */
 export const LANGUAGES = [
-  { code: 'en', label: 'EN', flag: '🇬🇧' },
-  { code: 'ru', label: 'RU', flag: '🇷🇺' },
-  { code: 'es', label: 'ES', flag: '🇪🇸' },
-  { code: 'fr', label: 'FR', flag: '🇫🇷' },
+  { code: 'en', label: 'English' },
+  { code: 'ru', label: 'Русский' },
+  { code: 'es', label: 'Español' },
+  { code: 'fr', label: 'Français' },
+  { code: 'de', label: 'Deutsch' },
+  { code: 'zh', label: '中文' },
+  { code: 'ja', label: '日本語' },
+  { code: 'pt', label: 'Português' },
+  { code: 'it', label: 'Italiano' },
+  { code: 'ar', label: 'العربية' }
 ];
