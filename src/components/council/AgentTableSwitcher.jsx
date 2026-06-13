@@ -12,7 +12,6 @@ import { t } from '../../i18n';
  * Shows: Averaged table (default) → toggle to each agent's individual table
  */
 export default function AgentTableSwitcher({ lastResult, comparison, isDark, brd, bg, bgI, tM, tS }) {
-    const { locale } = useState({});
     const [selectedAgent, setSelectedAgent] = useState('avg'); // 'avg' = averaged
     const gridApiRef = { current: null };
 

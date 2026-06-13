@@ -1,4 +1,5 @@
-import React, { useState, createPortal } from 'react';
+import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { API } from '../../utils/api';
 import { TEST_TOPIC } from '../../utils/councilTable.js';
 import { t } from '../../i18n';
@@ -357,16 +358,13 @@ export default function CouncilSettings({
                             <button onClick={async () => {
                                 setEditingAgent(prev => ({ ...prev, _saving: true, _error: null }));
                                 try {
-                                    let currentAgent = null;
-                                    setEditingAgent(prev => { currentAgent = prev; return prev; });
-                                    await API.put(`/v1/api/council/personas/${currentAgent.id}`, {
-                                        name: currentAgent.name,
-                                        system_prompt: currentAgent.system_prompt,
+                                    await API.put(`/v1/api/council/personas/${editingAgent.id}`, {
+                                        name: editingAgent.name,
+                                        system_prompt: editingAgent.system_prompt,
                                     });
-                                    const savedAgent = currentAgent;
                                     setPersonas(prev => prev.map(p =>
-                                        p.id === savedAgent.id
-                                            ? { ...p, name: savedAgent.name, system_prompt: savedAgent.system_prompt }
+                                        p.id === editingAgent.id
+                                            ? { ...p, name: editingAgent.name, system_prompt: editingAgent.system_prompt }
                                             : p
                                     ));
                                     setEditingAgent(null);

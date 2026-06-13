@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, createPortal } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { API } from '../../utils/api';
 import { TEST_TOPIC } from '../../utils/councilTable.js';
 import { t } from '../../i18n';

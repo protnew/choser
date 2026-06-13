@@ -6,9 +6,28 @@ import { useApp } from '../contexts/AppContext';
 export default function ArchitectureTree() {
     const { theme } = useApp();
     const isDark = theme === 'dark';
-    const [showRejected, setShowRejected] = useState(false);
+    const { id } = useParams();
+    const navigate = useNavigate();
 
-    // Helper for winning nodes
+    const [showRejected, setShowRejected] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    React.useEffect(() => {
+        const timer = setTimeout(() => setMounted(true), 50);
+        return () => clearTimeout(timer);
+    }, []);
+
+    const treeTitle = id === 'choser' ? 'Архитектурное Дерево (Choser)' : 'Архитектурное Дерево (Proxi Messenger)';
+    const primaryPrompt = id === 'choser' 
+        ? 'Задача: Спроектировать отказоустойчивую архитектуру для платформы Choser с фокусом на Edge Computing, Cloudflare Workers и SQLite-в-браузере.'
+        : 'Первичный промпт (Цель): Спроектировать децентрализованный мессенджер с гибридной P2P-топологией, встроенным туннелированием (обход блокировок) и криптографией уровня Signal, оптимизированный под работу в агрессивных сетях.';
+
+    const totalDecisions = 108;
+    const totalTablesNeeded = 35;
+    const seededTables = 5;
+    const doneDecisions = 73;
+    const tablesToBuild = totalTablesNeeded - seededTables;
+
     const winNode = (name, title, objs, params, quality, isDone = false) => ({
         name: title,
         winnerName: name,
@@ -21,7 +40,6 @@ export default function ArchitectureTree() {
         lineStyle: { color: '#10b981', width: 3 }
     });
 
-    // Helper for rejected nodes
     const rejNode = (name, title) => ({
         name: title,
         winnerName: name,
@@ -36,6 +54,7 @@ export default function ArchitectureTree() {
             winNode('T31: Backend', '🏆 Go (Golang)', 13, 10, 100),
             winNode('T35: UI Framework', '🏆 Svelte + Flutter', 10, 10, 100)
         ];
+        
         if (showRej) {
             childrenOfPlatform.push(
                 rejNode('T31: Backend', '❌ Rust (Долгая компиляция)'),
@@ -53,6 +72,7 @@ export default function ArchitectureTree() {
                 ]
             }
         ];
+
         if (showRej) {
             childrenOfMultiplexer.push(rejNode('T8: Transport', '❌ OpenVPN (Устарело)'));
         }
@@ -63,6 +83,7 @@ export default function ArchitectureTree() {
                 children: childrenOfMultiplexer
             }
         ];
+
         if (showRej) {
             childrenOfTopology.push(
                 rejNode('T30: Multiplexer', '❌ Xray-core (Нет нативного TUN)'),
@@ -70,263 +91,210 @@ export default function ArchitectureTree() {
             );
         }
 
-        const childrenOfStorage = [
-            winNode('T20: Streaming', '🏆 HLS over P2P', 10, 10, 0),
+        const childrenOfNetwork = [
             {
-                ...winNode('T23: Proof-of-Storage', '🏆 Challenge-Response', 10, 10, 0),
-                children: [
-                    {
-                        ...winNode('T22: Token Ledger', '🏆 Nostr State Events', 10, 10, 0),
-                        children: [
-                            winNode('T25: Payment Gateway', '🏆 Lightning Network', 10, 10, 0)
-                        ]
-                    }
-                ]
+                ...winNode('T32: Topology', '🏆 P2P + AutoRelay', 10, 10, 100),
+                children: childrenOfTopology
             }
         ];
+
+        const childrenOfCrypto = [
+            winNode('T20: DHT', '🏆 Kademlia + Nostr', 5, 8, 100),
+            winNode('T21: E2EE', '🏆 Noise Protocol', 4, 10, 100),
+            winNode('T22: Group Chat', '🏆 Sender Keys', 4, 8, 100),
+            winNode('T23: Payload', '🏆 AES-256-GCM', 5, 6, 100)
+        ];
+
         if (showRej) {
-            childrenOfStorage.push(
-                rejNode('T20: Streaming', '❌ WebRTC (Плохо через NAT)'),
-                rejNode('T37: Storage', '❌ IPFS (Слишком тяжелый)')
+            childrenOfCrypto.push(
+                rejNode('T21: E2EE', '❌ PGP (Громоздко)'),
+                rejNode('T22: Group Chat', '❌ OMEMO (Сложно масштабировать)')
             );
         }
+
+        const childrenOfLocal = [
+            winNode('T40: Local DB', '🏆 SQLite WAL + FTS5', 6, 10, 100),
+            winNode('T41: Background', '🏆 Service Worker', 4, 5, 100),
+            winNode('T42: UI State', '🏆 Svelte 5 Runes', 3, 5, 100)
+        ];
+
+        if (showRej) {
+            childrenOfLocal.push(
+                rejNode('T40: Local DB', '❌ IndexedDB (Тормозит)'),
+                rejNode('T41: Background', '❌ WebRTC Data (Не работает в фоне)')
+            );
+        }
+
+        const rootChildren = [
+            {
+                name: '1. Platform',
+                winnerName: 'Platform',
+                itemStyle: { color: '#8b5cf6' },
+                lineStyle: { color: '#10b981', width: 3 },
+                children: childrenOfPlatform
+            },
+            {
+                name: '2. Network',
+                winnerName: 'Network',
+                itemStyle: { color: '#3b82f6' },
+                lineStyle: { color: '#10b981', width: 3 },
+                children: childrenOfNetwork
+            },
+            {
+                name: '3. Crypto & Trust',
+                winnerName: 'Crypto & Trust',
+                itemStyle: { color: '#f59e0b' },
+                lineStyle: { color: '#10b981', width: 3 },
+                children: childrenOfCrypto
+            },
+            {
+                name: '4. Local Client',
+                winnerName: 'Local Client',
+                itemStyle: { color: '#10b981' },
+                lineStyle: { color: '#10b981', width: 3 },
+                children: childrenOfLocal
+            }
+        ];
 
         return {
             name: 'Proxi Architecture',
             winnerName: '108 Decisions',
             symbolSize: 20,
             itemStyle: { color: '#3b82f6' },
-            children: [
-                {
-                    name: '1. Platform',
-                    winnerName: 'Platform',
-                    itemStyle: { color: '#8b5cf6' },
-                    lineStyle: { color: '#10b981', width: 3 },
-                    children: childrenOfPlatform
-                },
-                {
-                    name: '2. Network',
-                    winnerName: 'Topology',
-                    itemStyle: { color: '#10b981' },
-                    lineStyle: { color: '#10b981', width: 3 },
-                    children: [
-                        {
-                            ...winNode('T34: General Topology', '🏆 P2P + AutoRelay', 13, 10, 100),
-                            children: childrenOfTopology
-                        }
-                    ]
-                },
-                {
-                    name: '3. Content',
-                    winnerName: 'Economy',
-                    itemStyle: { color: '#ec4899' },
-                    lineStyle: { color: '#10b981', width: 3 },
-                    children: [
-                        {
-                            ...winNode('T37: Storage', '🏆 Reed-Solomon', 10, 10, 0),
-                            children: childrenOfStorage
-                        }
-                    ]
-                },
-                {
-                    name: '4. Crypto & Trust',
-                    winnerName: 'Trust',
-                    itemStyle: { color: '#ef4444' },
-                    lineStyle: { color: '#10b981', width: 3 },
-                    children: [
-                        {
-                            ...winNode('T17: Identity & Routing', '🏆 Kademlia + Nostr', 12, 10, 100),
-                            children: [
-                                {
-                                    ...winNode('T16: E2E Encryption', '🏆 Noise Protocol', 10, 10, 0),
-                                    children: [
-                                        {
-                                            ...winNode('T13: Groups Crypto', '🏆 Sender Keys', 10, 10, 0),
-                                            children: [
-                                                winNode('T15: Symmetric Crypto', '🏆 AES-256-GCM', 4, 5, null, true)
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    name: '5. Local Client',
-                    winnerName: 'Client',
-                    itemStyle: { color: '#06b6d4' },
-                    lineStyle: { color: '#10b981', width: 3 },
-                    children: [
-                        {
-                            ...winNode('T32: Database Layer', '🏆 SQLite WAL + FTS5', 11, 10, 100),
-                            children: [
-                                winNode('T31: Offline Sync', '🏆 Service Worker', 4, 5, null, true),
-                                winNode('T30: State Mgmt', '🏆 Svelte 5 Runes', 5, 5, null, true)
-                            ]
-                        }
-                    ]
-                }
-            ]
+            children: rootChildren
         };
     };
 
     const treeData = useMemo(() => getTreeData(showRejected), [showRejected, isDark]);
 
-    const option = useMemo(() => ({
-        tooltip: {
-            trigger: 'item',
-            triggerOn: 'mousemove',
-            backgroundColor: isDark ? '#1e293b' : '#ffffff',
-            borderColor: isDark ? '#334155' : '#e2e8f0',
-            textStyle: { color: isDark ? '#f8fafc' : '#0f172a' },
-            formatter: (params) => {
-                const d = params.data;
-                return `<strong>${d.winnerName}</strong><br/>${d.name}<br/>${d.params ? d.params + ' params, ' + d.objs + ' objs' : ''}`;
-            }
-        },
-        series: [
-            {
-                type: 'tree',
-                data: [treeData],
-                top: '5%',
-                left: '10%',
-                bottom: '5%',
-                right: '25%',
-                roam: true, // Позволяет зумировать и панорамировать
-                symbolSize: (value, params) => {
-                    const d = params.data;
-                    if (d.isRejected) return 10;
-                    if (!d.params) return 14;
-                    return Math.max(14, d.params * 1.5);
-                },
-                edgeShape: 'polyline', // Делаем угловатые связи для инженерного вида
-                edgeForkPosition: '63%',
-                initialTreeDepth: 2, // Сворачиваем дерево по умолчанию, чтобы не было наложения
-                lineStyle: {
-                    color: isDark ? '#334155' : '#cbd5e1',
-                    width: 2
-                },
-                label: {
-                    position: 'top',
-                    verticalAlign: 'middle',
-                    align: 'center',
-                    backgroundColor: isDark ? '#0f172a' : '#ffffff',
-                    borderColor: isDark ? '#334155' : '#e2e8f0',
-                    borderWidth: 1,
-                    borderRadius: 8,
-                    padding: [8, 12],
-                    shadowColor: isDark ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.1)',
-                    shadowBlur: 10,
-                    formatter: function(params) {
-                        const d = params.data;
-                        let html = `{title|${d.winnerName}}\n{${d.isRejected ? 'rejected' : 'winner'}|${d.name}}`;
-                        if (d.params) {
-                            html += `\n{stats|${d.params} params • ${d.objs} objs}`;
-                        }
-                        if (d.isRejected) {
-                            html += `\n{barRej|ОТКЛОНЕНО}`;
-                        } else if (d.quality !== undefined && d.quality !== null) {
-                            const barClass = d.quality === 100 ? 'barDone' : 'barPend';
-                            html += `\n{${barClass}|${d.quality}% DONE}`;
-                        } else if (d.isDone) {
-                            html += `\n{barSkip|DONE (Inherited)}`;
-                        }
-                        return html;
+    const option = useMemo(() => {
+        return {
+            tooltip: {
+                trigger: 'item',
+                formatter: (params) => {
+                    const d = params?.data || {};
+                    return `<strong>${d.winnerName || ''}</strong><br/>${d.name || ''}<br/>${d.params ? d.params + ' params, ' + d.objs + ' objs' : ''}`;
+                }
+            },
+            series: [
+                {
+                    type: 'tree',
+                    data: [treeData],
+                    top: '10%',
+                    left: '12%',
+                    bottom: '10%',
+                    right: '15%',
+                    roam: true,
+                    symbol: 'circle',
+                    symbolSize: (value, params) => {
+                        const d = params?.data || {};
+                        if (d.isRejected) return 10;
+                        if (!d.params) return 14;
+                        return Math.max(14, d.params * 1.5);
                     },
-                    rich: {
-                        title: {
-                            fontSize: 11,
-                            color: isDark ? '#94a3b8' : '#64748b',
-                            padding: [0, 0, 4, 0]
-                        },
-                        winner: {
-                            fontSize: 14,
-                            fontWeight: 'bold',
-                            color: isDark ? '#ffffff' : '#0f172a',
-                            padding: [0, 0, 4, 0]
-                        },
-                        rejected: {
-                            fontSize: 13,
-                            color: '#ef4444',
-                            textDecoration: 'line-through',
-                            padding: [0, 0, 4, 0]
-                        },
-                        stats: {
-                            fontSize: 11,
-                            color: isDark ? '#cbd5e1' : '#475569',
-                            padding: [4, 0, 8, 0],
-                            fontWeight: '500'
-                        },
-                        barDone: {
-                            backgroundColor: '#10b981',
-                            color: '#ffffff',
-                            borderRadius: 4,
-                            padding: [4, 8],
-                            fontSize: 11,
-                            fontWeight: 'bold',
-                            align: 'center',
-                            width: '100%'
-                        },
-                        barPend: {
-                            backgroundColor: '#f59e0b',
-                            color: '#ffffff',
-                            borderRadius: 4,
-                            padding: [4, 8],
-                            fontSize: 11,
-                            fontWeight: 'bold',
-                            align: 'center',
-                            width: '100%'
-                        },
-                        barSkip: {
-                            backgroundColor: isDark ? '#334155' : '#e2e8f0',
-                            color: isDark ? '#94a3b8' : '#64748b',
-                            borderRadius: 4,
-                            padding: [4, 8],
-                            fontSize: 11,
-                            fontWeight: 'bold',
-                            align: 'center',
-                            width: '100%'
-                        },
-                        barRej: {
-                            backgroundColor: '#ef4444',
-                            color: '#ffffff',
-                            borderRadius: 4,
-                            padding: [4, 8],
-                            fontSize: 11,
-                            fontWeight: 'bold',
-                            align: 'center',
-                            width: '100%'
-                        }
-                    }
-                },
-                leaves: {
+                    edgeShape: 'polyline',
+                    edgeForkPosition: '63%',
+                    initialTreeDepth: 5,
+                    lineStyle: {
+                        color: isDark ? '#334155' : '#cbd5e1',
+                        width: 2,
+                        curveness: 0.5
+                    },
                     label: {
-                        position: 'right',
-                        verticalAlign: 'middle',
-                        align: 'left'
-                    }
-                },
-                expandAndCollapse: true,
-                animationDuration: 550,
-                animationDurationUpdate: 750
-            }
-        ]
-    }), [isDark, treeData]);
-
-    const totalDecisions = 108;
-    const totalTablesNeeded = 35;
-    const seededTables = 5;
-    const doneDecisions = 73;
-    const tablesToBuild = totalTablesNeeded - seededTables;
-
-    const { id } = useParams();
-    const navigate = useNavigate();
-
-    const treeTitle = id === 'choser' ? 'Архитектурное Дерево (Choser)' : 'Архитектурное Дерево (Proxi Messenger)';
-    const primaryPrompt = id === 'choser' 
-        ? 'Задача: Спроектировать отказоустойчивую архитектуру для платформы Choser с фокусом на Edge Computing, Cloudflare Workers и SQLite-в-браузере.'
-        : 'Первичный промпт (Цель): Спроектировать децентрализованный мессенджер с гибридной P2P-топологией, встроенным туннелированием (обход блокировок) и криптографией уровня Signal, оптимизированный под работу в агрессивных сетях.';
+                        position: 'top',
+                        verticalAlign: 'bottom',
+                        align: 'center',
+                        fontSize: 12,
+                        color: isDark ? '#f8fafc' : '#0f172a',
+                        distance: 8,
+                        formatter: function(params) {
+                            const d = params?.data || {};
+                            let html = `{title|${d.winnerName || ''}}\n{${d.isRejected ? 'rejected' : 'winner'}|${d.name || ''}}`;
+                            if (d.params) {
+                                html += `\n{stats|${d.params} params • ${d.objs} objs}`;
+                            }
+                            if (d.isRejected) {
+                                html += `\n{barRej|ОТКЛОНЕНО}`;
+                            } else if (d.quality !== undefined && d.quality !== null) {
+                                const barClass = d.quality === 100 ? 'barDone' : 'barPend';
+                                html += `\n{${barClass}|${d.quality}% DONE}`;
+                            } else if (d.isDone) {
+                                html += `\n{barSkip|DONE (Inherited)}`;
+                            }
+                            return html;
+                        },
+                        rich: {
+                            title: {
+                                fontSize: 11,
+                                color: isDark ? '#94a3b8' : '#64748b',
+                                padding: [0, 0, 4, 0]
+                            },
+                            winner: {
+                                fontSize: 13,
+                                color: isDark ? '#f8fafc' : '#0f172a',
+                                fontWeight: 'bold',
+                                padding: [0, 0, 4, 0]
+                            },
+                            rejected: {
+                                fontSize: 13,
+                                color: '#ef4444',
+                                padding: [0, 0, 4, 0]
+                            },
+                            stats: {
+                                fontSize: 11,
+                                color: isDark ? '#cbd5e1' : '#475569',
+                                padding: [4, 0, 8, 0],
+                                fontWeight: '500'
+                            },
+                            barDone: {
+                                backgroundColor: '#10b981',
+                                color: '#fff',
+                                padding: [2, 6],
+                                borderRadius: 4,
+                                fontSize: 10,
+                                fontWeight: 'bold'
+                            },
+                            barPend: {
+                                backgroundColor: '#f59e0b',
+                                color: '#fff',
+                                padding: [2, 6],
+                                borderRadius: 4,
+                                fontSize: 10,
+                                fontWeight: 'bold'
+                            },
+                            barRej: {
+                                backgroundColor: '#ef4444',
+                                color: '#fff',
+                                padding: [2, 6],
+                                borderRadius: 4,
+                                fontSize: 10,
+                                fontWeight: 'bold'
+                            },
+                            barSkip: {
+                                backgroundColor: '#64748b',
+                                color: '#fff',
+                                padding: [2, 6],
+                                borderRadius: 4,
+                                fontSize: 10,
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    leaves: {
+                        label: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'left',
+                            distance: 12
+                        }
+                    },
+                    expandAndCollapse: true,
+                    animationDuration: 550,
+                    animationDurationUpdate: 750
+                }
+            ]
+        };
+    }, [isDark, treeData]);
 
     return (
         <div style={{ height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column', background: 'var(--bg-main)', padding: '24px' }}>
@@ -397,11 +365,17 @@ export default function ArchitectureTree() {
                     {showRejected && <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><div style={{ width: 12, height: 12, background: '#ef4444', borderRadius: 2 }}></div> Отброшена</div>}
                 </div>
                 
-                <ReactECharts 
-                    option={option} 
-                    style={{ height: '100%', width: '100%' }}
-                    opts={{ renderer: 'canvas' }}
-                />
+                {mounted ? (
+                    <ReactECharts 
+                        option={option} 
+                        style={{ height: '100%', width: '100%' }}
+                        opts={{ renderer: 'canvas' }}
+                    />
+                ) : (
+                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)' }}>
+                        Отрисовка графа...
+                    </div>
+                )}
             </div>
         </div>
     );

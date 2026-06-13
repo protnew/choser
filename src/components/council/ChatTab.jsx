@@ -64,7 +64,7 @@ export default function ChatTab({ lastResult, topic, topicDesc, isDark, brd, bg,
             {/* Agent responses */}
             {(lastResult.votes || []).map((v, i) => {
                 const isExpanded = expandedAgent === i;
-                const responseText = v.response || '';
+                const responseText = typeof v.response === 'string' ? v.response : String(v.response || '');
                 const shortText = responseText.length > 300 ? responseText.substring(0, 300) + '...' : responseText;
 
                 return (
@@ -111,7 +111,7 @@ export default function ChatTab({ lastResult, topic, topicDesc, isDark, brd, bg,
                         background: isDark ? '#052e16' : '#f0fdf4',
                     }}>
                         <div style={{ fontSize: 11, opacity: 0.6, marginBottom: 2 }}>📝 {t('table.editorSummary')}</div>
-                        <div style={{ whiteSpace: 'pre-wrap' }}>{lastResult.editorSummary}</div>
+                        <div style={{ whiteSpace: 'pre-wrap' }}>{typeof lastResult.editorSummary === 'string' ? lastResult.editorSummary : String(lastResult.editorSummary || '')}</div>
                     </div>
                 </div>
             )}

@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useRef, createPortal } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { AG_GRID_LOCALE_RU } from '../grid/GridHelpers.jsx';
 import { extractJSON, stripMarkdown } from '../../utils/councilTable.js';
@@ -7,6 +8,7 @@ import CouncilProgress from './CouncilProgress.jsx';
 import AgentTableSwitcher from './AgentTableSwitcher.jsx';
 import ChatTab from './ChatTab.jsx';
 import PublishTab from './PublishTab.jsx';
+import TableVizSelector from '../viz/TableVizSelector.jsx';
 import { t } from '../../i18n';
 import { useLang } from '../../contexts/LangContext';
 import { ChoserLog } from '../../utils/log';
@@ -131,6 +133,9 @@ export default function CouncilTable({
                     </button>
                     <button onClick={() => setActiveTab('publish')} style={tabStyle(activeTab === 'publish')}>
                         🌐 {t('table.publish') || 'Публикация'}
+                    </button>
+                    <button onClick={() => setActiveTab('viz')} style={tabStyle(activeTab === 'viz')}>
+                        📊 Визуализация
                     </button>
                     <div style={{ flex: 1 }} />
                     <div style={{ display: 'flex', gap: 12, fontSize: 12, color: tS, alignItems: 'center', flexShrink: 0 }}>
@@ -309,7 +314,7 @@ export default function CouncilTable({
                                         )}
                                         {j?.analysis && (
                                             <div style={{ padding: '8px 14px', fontSize: 12, lineHeight: 1.6, color: tS, borderTop: `1px solid ${brd}`, whiteSpace: 'pre-wrap' }}>
-                                                {j.analysis}
+                                                {typeof j.analysis === 'string' ? j.analysis : String(j.analysis || '')}
                                             </div>
                                         )}
                                     </div>
@@ -351,7 +356,7 @@ export default function CouncilTable({
                                 </details>
                             );
                         })}
-                        {lastResult.debug && (
+                        {Array.isArray(lastResult.debug) && lastResult.debug.length > 0 && (
                             <div style={{ padding: 12, background: bgI, borderRadius: 8, fontSize: 12, color: tS, fontFamily: 'monospace' }}>
                                 <strong>Trace:</strong><br />{lastResult.debug.map((d, i) => `${d.persona}: ${d.status} ${d.ms}ms (${d.provider || '?'}/${d.model || '?'})`).join(' → ')}
                             </div>
@@ -520,9 +525,14 @@ export default function CouncilTable({
                         isDark={isDark} brd={brd} bg={bg} bgI={bgI} tM={tM} tS={tS}
                     />
                 )}
-            </div>
 
-            {/* INPUT — always enabled (Fix #6) */}
+                {/* TAB: VIZ — all visualization types */}
+                {lastResult && !lastResult.error && activeTab === 'viz' && (
+                    <div style={{ height: '100%', minHeight: 400, overflow: 'hidden' }}>
+                        <TableVizSelector comparison={comparison} />
+                    </div>
+                )}
+            </div>
             <div style={{ padding: '12px 20px', borderTop: `1px solid ${brd}`, display: 'flex', gap: 8, background: bg }}>
                 <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); runCouncil(); } }} placeholder={t('council.inputPlaceholder')} style={{ flex: 1, padding: '10px 14px', border: `1px solid ${brd}`, borderRadius: 8, fontSize: 14, background: bgI, color: tM }} />
                 {running && (

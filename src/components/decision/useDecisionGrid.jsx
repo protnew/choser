@@ -77,11 +77,11 @@ export function useDecisionGrid(comparison, onCellExpand) {
         const paramCols = cols.map((c) => ({
             headerName: `${c.title} (${c.weight}%)`,
             children: [
-                { headerName: '%', field: `${c.key}_g`, width: 60, editable: false,
+                { headerName: 'Балл', field: `${c.key}_g`, width: 70, editable: false,
                     valueGetter: p => p.data[c.key]?.grade || 0,
                     cellRenderer: p => <BarCell value={p.value} max={10} colorStart='#a5b4fc' colorEnd='#c7d2fe' label={p.value} />,
                     cellStyle: { textAlign: 'center' } },
-                { headerName: 'Обоснование', field: `${c.key}_v`, width: 180, editable: false,
+                { headerName: 'Обоснование', field: `${c.key}_v`, width: 200, editable: false,
                     valueGetter: p => p.data[c.key]?.value || '',
                     cellRenderer: expandableCell
                 }
