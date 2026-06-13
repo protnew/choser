@@ -189,9 +189,10 @@ function buildTreeNode(rootName, children) {
         children: children.map(cat => ({
             name: cat.name,
             value: cat.value || (cat.children ? cat.children.reduce((s,c)=>s+(c.value||100),0) : 100),
-            children: (cat.children || []).map(leaf => ({
+        children: (cat.children || []).map(leaf => ({
                 name: leaf.name,
                 value: leaf.value || 100,
+                tableId: leaf.tableId,
             })),
             itemStyle: cat.value > 700 ? { color: '#22c55e' } : cat.value > 400 ? { color: '#f59e0b' } : { color: '#94a3b8' },
         })),

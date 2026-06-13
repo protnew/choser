@@ -10,7 +10,7 @@ export default function ArchitectureTree() {
     const navigate = useNavigate();
 
     const [showRejected, setShowRejected] = useState(false);
-    const [mounted, setMounted] = useState(false);
+    const [vizType, setVizType] = useState('tree-TB');
 
     React.useEffect(() => {
         const timer = setTimeout(() => setMounted(true), 50);
@@ -168,133 +168,121 @@ export default function ArchitectureTree() {
     const treeData = useMemo(() => getTreeData(showRejected), [showRejected, isDark]);
 
     const option = useMemo(() => {
-        return {
+        const baseOpts = {
             tooltip: {
                 trigger: 'item',
                 formatter: (params) => {
                     const d = params?.data || {};
-                    return `<strong>${d.winnerName || ''}</strong><br/>${d.name || ''}<br/>${d.params ? d.params + ' params, ' + d.objs + ' objs' : ''}`;
+                    return `<strong>${d.winnerName || d.name || ''}</strong><br/>${d.name !== d.winnerName ? d.name || '' : ''}<br/>${d.params ? d.params + ' params, ' + d.objs + ' objs' : ''}`;
                 }
             },
-            series: [
-                {
-                    type: 'tree',
-                    data: [treeData],
-                    top: '10%',
-                    left: '12%',
-                    bottom: '10%',
-                    right: '15%',
-                    roam: true,
-                    symbol: 'circle',
-                    symbolSize: (value, params) => {
-                        const d = params?.data || {};
-                        if (d.isRejected) return 10;
-                        if (!d.params) return 14;
-                        return Math.max(14, d.params * 1.5);
-                    },
-                    edgeShape: 'polyline',
-                    edgeForkPosition: '63%',
-                    initialTreeDepth: 5,
-                    lineStyle: {
-                        color: isDark ? '#334155' : '#cbd5e1',
-                        width: 2,
-                        curveness: 0.5
-                    },
-                    label: {
-                        position: 'top',
-                        verticalAlign: 'bottom',
-                        align: 'center',
-                        fontSize: 12,
-                        color: isDark ? '#f8fafc' : '#0f172a',
-                        distance: 8,
-                        formatter: function(params) {
-                            const d = params?.data || {};
-                            let html = `{title|${d.winnerName || ''}}\n{${d.isRejected ? 'rejected' : 'winner'}|${d.name || ''}}`;
-                            if (d.params) {
-                                html += `\n{stats|${d.params} params • ${d.objs} objs}`;
-                            }
-                            if (d.isRejected) {
-                                html += `\n{barRej|ОТКЛОНЕНО}`;
-                            } else if (d.quality !== undefined && d.quality !== null) {
-                                const barClass = d.quality === 100 ? 'barDone' : 'barPend';
-                                html += `\n{${barClass}|${d.quality}% DONE}`;
-                            } else if (d.isDone) {
-                                html += `\n{barSkip|DONE (Inherited)}`;
-                            }
-                            return html;
-                        },
-                        rich: {
-                            title: {
-                                fontSize: 11,
-                                color: isDark ? '#94a3b8' : '#64748b',
-                                padding: [0, 0, 4, 0]
-                            },
-                            winner: {
-                                fontSize: 13,
-                                color: isDark ? '#f8fafc' : '#0f172a',
-                                fontWeight: 'bold',
-                                padding: [0, 0, 4, 0]
-                            },
-                            rejected: {
-                                fontSize: 13,
-                                color: '#ef4444',
-                                padding: [0, 0, 4, 0]
-                            },
-                            stats: {
-                                fontSize: 11,
-                                color: isDark ? '#cbd5e1' : '#475569',
-                                padding: [4, 0, 8, 0],
-                                fontWeight: '500'
-                            },
-                            barDone: {
-                                backgroundColor: '#10b981',
-                                color: '#fff',
-                                padding: [2, 6],
-                                borderRadius: 4,
-                                fontSize: 10,
-                                fontWeight: 'bold'
-                            },
-                            barPend: {
-                                backgroundColor: '#f59e0b',
-                                color: '#fff',
-                                padding: [2, 6],
-                                borderRadius: 4,
-                                fontSize: 10,
-                                fontWeight: 'bold'
-                            },
-                            barRej: {
-                                backgroundColor: '#ef4444',
-                                color: '#fff',
-                                padding: [2, 6],
-                                borderRadius: 4,
-                                fontSize: 10,
-                                fontWeight: 'bold'
-                            },
-                            barSkip: {
-                                backgroundColor: '#64748b',
-                                color: '#fff',
-                                padding: [2, 6],
-                                borderRadius: 4,
-                                fontSize: 10,
-                                fontWeight: 'bold'
-                            }
-                        }
-                    },
-                    leaves: {
-                        label: {
-                            position: 'right',
-                            verticalAlign: 'middle',
-                            align: 'left',
-                            distance: 12
-                        }
-                    },
-                    expandAndCollapse: true,
-                    animationDuration: 550,
-                    animationDurationUpdate: 750
-                }
-            ]
         };
-    }, [isDark, treeData]);
+
+        const treeSeries = {
+            type: 'tree',
+            data: [treeData],
+            top: '10%',
+            left: '12%',
+            bottom: '10%',
+            right: '15%',
+            roam: true,
+            symbol: 'circle',
+            symbolSize: (value, params) => {
+                const d = params?.data || {};
+                if (d.isRejected) return 10;
+                if (!d.params) return 14;
+                return Math.max(14, d.params * 1.5);
+            },
+            edgeShape: 'polyline',
+            edgeForkPosition: '63%',
+            initialTreeDepth: 5,
+            lineStyle: {
+                color: isDark ? '#334155' : '#cbd5e1',
+                width: 2,
+                curveness: 0.5
+            },
+            label: {
+                position: 'top',
+                verticalAlign: 'bottom',
+                align: 'center',
+                fontSize: 12,
+                color: isDark ? '#f8fafc' : '#0f172a',
+                distance: 8,
+                formatter: function(params) {
+                    const d = params?.data || {};
+                    let html = `{title|${d.winnerName || ''}}\n{${d.isRejected ? 'rejected' : 'winner'}|${d.name || ''}}`;
+                    if (d.params) {
+                        html += `\n{stats|${d.params} params • ${d.objs} objs}`;
+                    }
+                    if (d.isRejected) {
+                        html += `\n{barRej|ОТКЛОНЕНО}`;
+                    } else if (d.quality !== undefined && d.quality !== null) {
+                        const barClass = d.quality === 100 ? 'barDone' : 'barPend';
+                        html += `\n{${barClass}|${d.quality}% DONE}`;
+                    } else if (d.isDone) {
+                        html += `\n{barSkip|DONE (Inherited)}`;
+                    }
+                    return html;
+                },
+                rich: {
+                    title: { fontSize: 11, color: isDark ? '#94a3b8' : '#64748b', padding: [0, 0, 4, 0] },
+                    winner: { fontSize: 13, color: isDark ? '#f8fafc' : '#0f172a', fontWeight: 'bold', padding: [0, 0, 4, 0] },
+                    rejected: { fontSize: 13, color: '#ef4444', padding: [0, 0, 4, 0] },
+                    stats: { fontSize: 11, color: isDark ? '#cbd5e1' : '#475569', padding: [4, 0, 8, 0], fontWeight: '500' },
+                    barDone: { backgroundColor: '#10b981', color: '#fff', padding: [2, 6], borderRadius: 4, fontSize: 10, fontWeight: 'bold' },
+                    barPend: { backgroundColor: '#f59e0b', color: '#fff', padding: [2, 6], borderRadius: 4, fontSize: 10, fontWeight: 'bold' },
+                    barRej: { backgroundColor: '#ef4444', color: '#fff', padding: [2, 6], borderRadius: 4, fontSize: 10, fontWeight: 'bold' },
+                    barSkip: { backgroundColor: '#64748b', color: '#fff', padding: [2, 6], borderRadius: 4, fontSize: 10, fontWeight: 'bold' }
+                }
+            },
+            leaves: { label: { position: 'right', verticalAlign: 'middle', align: 'left', distance: 12 } },
+            expandAndCollapse: true,
+            animationDuration: 550,
+            animationDurationUpdate: 750
+        };
+
+        if (vizType === 'tree-TB') {
+            treeSeries.layout = 'orthogonal';
+            treeSeries.orient = 'TB';
+        } else if (vizType === 'tree-LR') {
+            treeSeries.layout = 'orthogonal';
+            treeSeries.orient = 'LR';
+            treeSeries.label.position = 'left';
+            treeSeries.label.verticalAlign = 'middle';
+            treeSeries.label.align = 'right';
+            treeSeries.leaves.label.position = 'right';
+        } else if (vizType === 'tree-radial') {
+            treeSeries.layout = 'radial';
+            treeSeries.label.position = 'inside';
+        } else if (vizType === 'sunburst') {
+            return {
+                ...baseOpts,
+                series: [{
+                    type: 'sunburst',
+                    data: treeData.children,
+                    radius: [0, '90%'],
+                    label: { rotate: 'radial', fontSize: 10 },
+                    itemStyle: { borderColor: '#fff', borderWidth: 1 }
+                }]
+            };
+        } else if (vizType === 'treemap') {
+            return {
+                ...baseOpts,
+                series: [{
+                    type: 'treemap',
+                    data: treeData.children,
+                    roam: false,
+                    label: { show: true, formatter: '{b}' },
+                    levels: [
+                        { itemStyle: { borderColor: '#fff', borderWidth: 2, gapWidth: 2 } },
+                        { colorSaturation: [0.3, 0.6], itemStyle: { borderColorSaturation: 0.6, gapWidth: 1 } }
+                    ]
+                }]
+            };
+        }
+
+        return { ...baseOpts, series: [treeSeries] };
+    }, [isDark, treeData, vizType]);
 
     return (
         <div style={{ height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column', background: 'var(--bg-main)', padding: '24px' }}>
@@ -316,6 +304,20 @@ export default function ArchitectureTree() {
                 </div>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'flex-end' }}>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                        <select 
+                            value={vizType}
+                            onChange={e => setVizType(e.target.value)}
+                            style={{ padding: '6px 12px', borderRadius: '6px', border: '1px solid var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-color)', fontSize: '13px', cursor: 'pointer' }}
+                        >
+                            <option value="tree-TB">🌳 1. Дерево сверху-вниз (TB)</option>
+                            <option value="tree-LR">🌲 2. Дерево слева-направо (LR)</option>
+                            <option value="tree-radial">☀️ 3. Дерево радиальное</option>
+                            <option value="sunburst">🎯 4. Sunburst (кольца)</option>
+                            <option value="treemap">🟦 5. Treemap (блоки)</option>
+                        </select>
+                    </div>
+
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--bg-card)', padding: '4px', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
                         <button 
                             className={`tbtn ${!showRejected ? 'active' : ''}`} 
