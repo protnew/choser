@@ -14,7 +14,7 @@ services:
       - CORS_ORIGINS=${CORS_ORIGINS:-*}
       - AUTH_ENABLED=${AUTH_ENABLED:-false}
       - JWT_SECRET=${JWT_SECRET:-change-me-in-production}
-      - ZAI_API_KEY=\${ZAI_API_KEY}
+      - ZAI_API_KEY=${ZAI_API_KEY}
       - ZAI_MODEL=${ZAI_MODEL:-GLM-5.1}
       - ZAI_BASE_URL=${ZAI_BASE_URL:-https://open.bigmodel.cn/api/coding/paas/v4}
     env_file:

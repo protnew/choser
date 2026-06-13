@@ -135,7 +135,7 @@ export function graphForce(rootName, children) {
     });
 
     return {
-        tooltip: { formatter: p => p.dataType === 'edge' ? '' : `<b>${p.data.name.replace(/_\d+$/, '')}</b>` },
+        tooltip: { formatter: p => p.dataType === 'edge' ? '' : `<b>${(p.data?.name || '').replace(/_\d+$/, '')}</b>` },
         legend: [{ data: categories.map(c => c.name), bottom: 5, textStyle: { fontSize: 10 } }],
         series: [{
             type: 'graph',
@@ -300,10 +300,10 @@ export function scatterConfig(rows, columns) {
         return [r.price || 0, Math.round(utility * 100), r.name];
     }).filter(d => d[0] > 0);
 
-    const noPrice = rows.map(r => {
+    const noPrice = rows.filter(r => !r.price || r.price === 0).map(r => {
         const utility = columns.reduce((s,c) => s + (r[c.key]?.grade||0) * c.weight / 100, 0);
         return [0, Math.round(utility * 100), r.name];
-    }).filter(r => r[0] === 0);
+    });
 
     return {
         tooltip: { formatter: p => `<b>${p.data[2]}</b><br/>Цена: ${p.data[0]}<br/>Utility: ${p.data[1]}` },
@@ -503,7 +503,6 @@ export function funnelConfig(rows, columns) {
             data: data,
             sort: 'descending',
             label: { show: true, fontSize: 11, position: 'inside' },
-            labelLine: { length: 10 },
             itemStyle: { borderColor: '#fff', borderWidth: 1 },
             emphasis: { label: { fontSize: 13 } },
             left: '10%', right: '10%', top: 30, bottom: 30,
