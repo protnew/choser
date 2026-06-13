@@ -515,25 +515,25 @@ export function funnelConfig(rows, columns) {
 // ═══════════════════════════════════════
 
 export const TREE_VIZ_OPTIONS = [
-    { value: 'tree-TB', label: '1. Дерево сверху-вниз (TB)', icon: '🌳' },
-    { value: 'tree-LR', label: '2. Дерево слева-направо (LR)', icon: '🌲' },
-    { value: 'tree-radial', label: '3. Дерево радиальное', icon: '☀️' },
-    { value: 'treemap', label: '4. Treemap (площадь=utility)', icon: '🟦' },
-    { value: 'sunburst', label: '5. Sunburst (кольца)', icon: '🎯' },
-    { value: 'graph-force', label: '6. Граф (физика)', icon: '🕸️' },
-    { value: 'sankey', label: '7. Sankey (потоки)', icon: '🌊' },
+    { value: 'tree-TB', label: '1. Дерево сверху-вниз [ECharts]', icon: '🌳' },
+    { value: 'tree-LR', label: '2. Дерево слева-направо [ECharts]', icon: '🌲' },
+    { value: 'tree-radial', label: '3. Дерево радиальное [ECharts]', icon: '☀️' },
+    { value: 'treemap', label: '4. Treemap — площадь=utility [ECharts]', icon: '🟦' },
+    { value: 'sunburst', label: '5. Sunburst — кольца [ECharts]', icon: '🎯' },
+    { value: 'graph-force', label: '6. Граф — физика [ECharts]', icon: '🕸️' },
+    { value: 'sankey', label: '7. Sankey — потоки [ECharts]', icon: '🌊' },
 ];
 
 export const TABLE_VIZ_OPTIONS = [
-    { value: 'heatmap', label: '1. Heatmap (матрица баллов)', icon: '🔥' },
-    { value: 'radar', label: '2. Radar (профиль по параметрам)', icon: '📡' },
-    { value: 'bar', label: '3. Bar (сортировка по utility)', icon: '📊' },
-    { value: 'scatter', label: '4. Scatter (utility vs цена)', icon: '🔵' },
-    { value: 'treemap', label: '5. Treemap (площадь=utility)', icon: '🟦' },
-    { value: 'sankey', label: '6. Sankey (параметр→объект)', icon: '🌊' },
-    { value: 'parallel', label: '7. Parallel (параллельные оси)', icon: '||' },
-    { value: 'sunburst', label: '8. Sunburst (иерархия)', icon: '🎯' },
-    { value: 'gauge', label: '9. Gauge (спидометры)', icon: '⏱️' },
-    { value: 'pie', label: '10. Pie (доли utility)', icon: '🥧' },
-    { value: 'funnel', label: '11. Funnel (воронка)', icon: '🔻' },
+    { value: 'heatmap', label: '1. Heatmap — матрица баллов [ECharts]', icon: '🔥' },
+    { value: 'radar', label: '2. Radar — профиль [ECharts]', icon: '📡' },
+    { value: 'bar', label: '3. Bar — сортировка [ECharts]', icon: '📊' },
+    { value: 'scatter', label: '4. Scatter — utility vs цена [ECharts]', icon: '🔵' },
+    { value: 'treemap', label: '5. Treemap — площадь [ECharts]', icon: '🟦' },
+    { value: 'sankey', label: '6. Sankey — параметр→объект [ECharts]', icon: '🌊' },
+    { value: 'parallel', label: '7. Parallel — паралл. оси [ECharts]', icon: '‖' },
+    { value: 'sunburst', label: '8. Sunburst — иерархия [ECharts]', icon: '🎯' },
+    { value: 'gauge', label: '9. Gauge — спидометры [ECharts]', icon: '⏱️' },
+    { value: 'pie', label: '10. Pie — доли utility [ECharts]', icon: '🥧' },
+    { value: 'funnel', label: '11. Funnel — воронка [ECharts]', icon: '🔻' },
 ];
