@@ -1,6 +1,8 @@
 /**
  * Frontend API client with token management and error handling.
  */
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export const API = {
     token: localStorage.getItem('choser_token'),
 
@@ -21,6 +23,7 @@ export const API = {
      * @returns {Promise<object>}
      */
     async request(url, options = {}) {
+        const fullUrl = url.startsWith('http') ? url : `${API_BASE}${url}`;
         const headers = { ...this.getHeaders(), ...options.headers };
         if (options.body && typeof options.body === 'object') {
             headers['Content-Type'] = 'application/json';
@@ -33,7 +36,7 @@ export const API = {
             // Council needs long timeout (10 agents × ~20s each)
             const ms = url.includes('/council/') ? 600000 : 15000;
             const timeout = setTimeout(() => controller.abort(), ms);
-            res = await fetch(url, { ...options, headers, signal: controller.signal });
+            res = await fetch(fullUrl, { ...options, headers, signal: controller.signal });
             clearTimeout(timeout);
         } catch (networkError) {
             if (networkError.name === 'AbortError') {
