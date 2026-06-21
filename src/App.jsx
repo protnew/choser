@@ -23,7 +23,6 @@ const DistributionAnalysis = React.lazy(() => import('./components/DistributionA
 const ResearchPanel = React.lazy(() => import('./components/ResearchPanel'));
 const SensitivityTab = React.lazy(() => import('./components/admin/SensitivityTab'));
 const SensitivityExtended = React.lazy(() => import('./components/admin/SensitivityExtended'));
-const CouncilN8n = React.lazy(() => import('./components/CouncilN8n'));
 
 // Error Boundary — ловит крэши вместо белого экрана
 class ErrorBoundary extends React.Component {
@@ -146,7 +145,6 @@ function AppContent() {
                         <button onClick={() => navigate('/trees')} className={`tbtn ${location.pathname.startsWith('/trees') ? 'active' : ''}`} style={{ background: location.pathname.startsWith('/trees') ? 'var(--bg-main)' : 'transparent', border: 'none', color: location.pathname.startsWith('/trees') ? '#10b981' : 'var(--text-muted)' }}>🌳 Деревья</button>
                         <button onClick={() => setShowResearch(true)} className="tbtn" style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)' }}>🔍 Исследования</button>
                         <button onClick={() => navigate('/decision')} className={`tbtn ${location.pathname === '/decision' ? 'active' : ''}`} style={{ background: location.pathname === '/decision' ? 'var(--bg-main)' : 'transparent', border: 'none', color: location.pathname === '/decision' ? '#f59e0b' : 'var(--text-muted)' }}>🏛️ Совет</button>
-                        <button onClick={() => navigate('/council-n8n')} className={`tbtn ${location.pathname === '/council-n8n' ? 'active' : ''}`} style={{ background: location.pathname === '/council-n8n' ? 'var(--bg-main)' : 'transparent', border: 'none', color: location.pathname === '/council-n8n' ? '#f59e0b' : 'var(--text-muted)' }}>⚙️ n8n Совет</button>
                     </div>
                 )}
 
@@ -211,7 +209,6 @@ function AppContent() {
                         <Route path="/admin/10-sensitivity-extended" element={user?.role === 'admin' ? <SensitivityExtended /> : <Navigate to="/" />} />
                         <Route path="/admin/11-distributions" element={user?.role === 'admin' ? <DistributionAnalysis /> : <Navigate to="/" />} />
                         <Route path="/decision" element={user ? <DecisionPage /> : <Navigate to="/" />} />
-                        <Route path="/council-n8n" element={user ? <CouncilN8n /> : <Navigate to="/" />} />
                         <Route path="/trees" element={<TreesList />} />
                         <Route path="/trees/:id" element={<ArchitectureTree />} />
                         <Route path="*" element={<Navigate to="/" />} />

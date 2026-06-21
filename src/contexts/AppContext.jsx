@@ -6,12 +6,9 @@ export function AppProvider({ children }) {
     const [theme, setTheme] = useState(() => {
         const saved = localStorage.getItem('choser_theme');
         if (saved) return saved;
-        // Auto-detect system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            return 'dark';
-        }
         return 'light';
     });
+
     const [displayMode, setDisplayMode] = useState(localStorage.getItem('choser_view') || 'grid');
     const [uiMode, setUiMode] = useState(localStorage.getItem('choser_ui_mode') || 'classic');
 
@@ -31,17 +28,8 @@ export function AppProvider({ children }) {
         return () => clearTimeout(timer);
     }, [theme]);
 
-    // Listen for system theme changes (only if user hasn't set preference)
-    useEffect(() => {
-        const mq = window.matchMedia('(prefers-color-scheme: dark)');
-        const handler = (e) => {
-            if (!localStorage.getItem('choser_theme')) {
-                setTheme(e.matches ? 'dark' : 'light');
-            }
-        };
-        mq.addEventListener('change', handler);
-        return () => mq.removeEventListener('change', handler);
-    }, []);
+    // Theme is user-controlled, no auto-detect
+    useEffect(() => {}, []);
 
     useEffect(() => {
         if (uiMode === 'premium') {
