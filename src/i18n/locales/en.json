@@ -1,0 +1,98 @@
+{
+  "meta": {
+    "name": "English",
+    "code": "en",
+    "dir": "ltr"
+  },
+  "nav": {
+    "tables": "Tables",
+    "council": "Council",
+    "admin": "Admin",
+    "settings": "Settings",
+    "catalog": "Catalog",
+    "research": "Research",
+    "search": "Search tables...",
+    "newTable": "New Table",
+    "newTableMenu": "Create table",
+    "importJsonMenu": "Import JSON",
+    "theme": "Toggle theme",
+    "trees": "Trees"
+  },
+  "council": {
+    "title": "Expert Council",
+    "sequential": "Sequential",
+    "parallel": "Parallel",
+    "start": "🚀 Start",
+    "started": "Council started",
+    "agents": "agents",
+    "question": "Question to Council",
+    "weight": "Weight",
+    "score": "Score",
+    "confidence": "Confidence",
+    "recommendation": "Recommendation",
+    "consensus": "Consensus",
+    "editor_summary": "Editor Summary",
+    "running": "Council is thinking...",
+    "completed": "Council completed",
+    "persona": "Thinking now"
+  },
+  "table": {
+    "title": "Title",
+    "add": "Add",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search...",
+    "columns": "Parameters",
+    "rows": "Rows",
+    "weight": "Weight",
+    "no_data": "No data",
+    "export": "Export",
+    "import": "Import",
+    "share": "Share"
+  },
+  "error": {
+    "timeout": "Request timeout",
+    "no_connection": "No internet connection",
+    "generic": "Error",
+    "not_found": "Not found",
+    "try_again": "Try again",
+    "check_internet": "Check your internet"
+  },
+  "admin": {
+    "stats": "Statistics",
+    "users": "Users",
+    "backup": "Backup",
+    "settings": "Settings",
+    "analytics": "Analytics",
+    "decisions": "Decisions",
+    "tables_count": "Tables",
+    "rows_count": "Rows",
+    "tokens_used": "Tokens used",
+    "db_size": "DB size",
+    "ebm": "Distributions",
+    "sensitivity": "Sensitivity",
+    "sensitivityExt": "Extended"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "add": "Add",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "language": "Language"
+  },
+  "app": {
+    "title": "Choser",
+    "subtitle": "Decision Platform",
+    "loadingModule": "Loading module...",
+    "stableVersion": "Stable version"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "meta": { "name": "日本語", "code": "ja", "dir": "ltr" },
+  "nav": { "tables": "テーブル", "council": "評議会", "admin": "管理", "settings": "設定", "catalog": "カタログ", "research": "リサーチ" },
+  "council": { "title": "専門家評議会", "sequential": "順次", "parallel": "並列", "start": "🚀 開始", "started": "評議会開始", "agents": "エージェント", "question": "評議会への質問", "weight": "重み", "score": "スコア", "confidence": "信頼度", "recommendation": "推奨", "consensus": "コンセンサス", "editor_summary": "編集者サマリー", "running": "評議会検討中...", "completed": "評議会完了", "persona": "検討中" },
+  "table": { "title": "タイトル", "add": "追加", "save": "保存", "cancel": "キャンセル", "delete": "削除", "edit": "編集", "search": "検索...", "columns": "パラメータ", "rows": "行", "weight": "重み", "no_data": "データなし", "export": "エクスポート", "import": "インポート", "share": "共有" },
+  "error": { "timeout": "リクエストタイムアウト", "no_connection": "インターネット未接続", "generic": "エラー", "not_found": "見つかりません", "try_again": "再試行", "check_internet": "インターネット接続を確認" },
+  "admin": { "stats": "統計", "users": "ユーザー", "backup": "バックアップ", "settings": "設定", "analytics": "分析", "decisions": "決定", "tables_count": "テーブル数", "rows_count": "行数", "tokens_used": "トークン使用量", "db_size": "DBサイズ" },
+  "common": { "loading": "読み込み中...", "save": "保存", "cancel": "キャンセル", "delete": "削除", "add": "追加", "edit": "編集", "close": "閉じる", "confirm": "確認", "yes": "はい", "no": "いいえ", "ok": "OK", "language": "言語" }
+}

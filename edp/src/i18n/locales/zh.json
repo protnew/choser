@@ -1,0 +1,9 @@
+{
+  "meta": { "name": "中文", "code": "zh", "dir": "ltr" },
+  "nav": { "tables": "表格", "council": "专家委员会", "admin": "管理", "settings": "设置", "catalog": "目录", "research": "研究" },
+  "council": { "title": "专家委员会", "sequential": "顺序", "parallel": "并行", "start": "🚀 开始", "started": "委员会已启动", "agents": "位专家", "question": "向委员会提问", "weight": "权重", "score": "评分", "confidence": "信心", "recommendation": "推荐", "consensus": "共识", "editor_summary": "编辑摘要", "running": "委员会思考中...", "completed": "委员会已完成", "persona": "正在思考" },
+  "table": { "title": "标题", "add": "添加", "save": "保存", "cancel": "取消", "delete": "删除", "edit": "编辑", "search": "搜索...", "columns": "参数", "rows": "行", "weight": "权重", "no_data": "暂无数据", "export": "导出", "import": "导入", "share": "分享" },
+  "error": { "timeout": "请求超时", "no_connection": "无网络连接", "generic": "错误", "not_found": "未找到", "try_again": "重试", "check_internet": "请检查网络" },
+  "admin": { "stats": "统计", "users": "用户", "backup": "备份", "settings": "设置", "analytics": "分析", "decisions": "决策", "tables_count": "表格数", "rows_count": "行数", "tokens_used": "Token用量", "db_size": "数据库大小" },
+  "common": { "loading": "加载中...", "save": "保存", "cancel": "取消", "delete": "删除", "add": "添加", "edit": "编辑", "close": "关闭", "confirm": "确认", "yes": "是", "no": "否", "ok": "确定", "language": "语言" }
+}

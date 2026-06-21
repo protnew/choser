@@ -1,0 +1,362 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { API } from '../utils/api';
+
+const TEST_TOPIC = 'Какую подписку на LLM-сервис выбрать?\n\nКонтекст: Сравнение 10 подписок на LLM-сервисы по 18 параметрам:\n1. Цена подписки ($/мес)\n2. Лимиты токенов (вход/выход в день)\n3. Количество доступных моделей\n4. Качество генерации кода (1-10)\n5. Мультимодальность (изображения, аудио, видео)\n6. Размер контекстного окна (K токенов)\n7. Доступ к API\n8. Скорость ответа (сек)\n9. Fine-tuning своих моделей\n10. Безопасность и приватность данных\n11. Поддержка RAG\n12. Агенты (autonomous agents)\n13. Интеграции (IDE, CRM, etc)\n14. Документация и learning resources\n15. Community и экосистема\n16. SLA (uptime %)\n17. Цена за 1M токенов ввода\n18. Цена за 1M токенов вывода\n\nБюджет: до $200/мес. Цель: выбор оптимальной подписки для AI-разработки и прототипирования.';
+
+function extractJSON(text) {
+    if (!text) return null;
+    const m = text.match(/```json\s*([\s\S]*?)\s*```/);
+    if (m) { try { return JSON.parse(m[1]); } catch {} }
+    try { return JSON.parse(text); } catch {}
+    const brace = text.indexOf('{');
+    if (brace >= 0) { try { return JSON.parse(text.substring(brace)); } catch {} }
+    return null;
+}
+
+const PARAM_ALIASES = {
+    'цена': ['цена','стоимость','цена_качество','price','cost'],
+    'качество_кода': ['качество_кода','генерация_кода','качество_генерации_кода','code_quality'],
+    'контекст': ['контекст','контекстное_окно','context_window','размер_контекстного_окна'],
+    'лимиты': ['лимиты','лимиты_токенов','token_limits','лимит'],
+    'api': ['api','api_доступ','доступ_к_api','api_access'],
+    'скорость': ['скорость','скорость_ответа','speed','скорость_внедрения'],
+    'мультимодальность': ['мультимодальность','multimodal','multimodality'],
+    'интеграции': ['интеграции','integrations','ide_integration'],
+    'безопасность': ['безопасность','приватность','privacy','security','gdpr'],
+    'tco': ['tco','прогнозируемость','скрытые_расходы','стоимость_на_человека','цена_токен'],
+    'экосистема': ['экосистема','community','сообщество','поддержка'],
+    'документация': ['документация','documentation','learning','обучение'],
+    'модели': ['модели','количество_моделей','models'],
+    'агенты': ['агенты','autonomous','кастомизация','гибкость'],
+    'sla': ['sla','uptime','операционные_риски','масштабируемость'],
+    'ux': ['ux','пользовательский_опыт','обучаемость','порог_входа'],
+    'кастомизация': ['кастомизация','fine_tuning','настройка','гибкость'],
+};
+
+function normalizeParam(rawParam) {
+    const n = rawParam.replace(/[_\-\s]+/g, '_').toLowerCase();
+    for (const [canonical, aliases] of Object.entries(PARAM_ALIASES)) {
+        if (aliases.some(a => n.includes(a) || a === n)) return canonical;
+    }
+    return n;
+}
+
+function buildComparisonTable(votes) {
+    const allObjects = new Map();
+    const paramSet = new Map();
+    for (const v of votes) {
+        const j = extractJSON(v.response);
+        if (!j?.scores) continue;
+        for (const [objName, params] of Object.entries(j.scores)) {
+            if (typeof params !== 'object') continue;
+            if (!allObjects.has(objName)) allObjects.set(objName, { params: new Map() });
+            const obj = allObjects.get(objName);
+            for (const [rawParam, val] of Object.entries(params)) {
+                const canonical = normalizeParam(rawParam);
+                if (!paramSet.has(canonical)) paramSet.set(canonical, rawParam);
+                const num = typeof val === 'number' ? val : parseFloat(val);
+                if (!isNaN(num)) {
+                    if (!obj.params.has(canonical)) obj.params.set(canonical, { ws: 0, tw: 0 });
+                    const d = obj.params.get(canonical);
+                    d.ws += num * (v.weight || 1);
+                    d.tw += (v.weight || 1);
+                }
+            }
+        }
+    }
+    const params = [...paramSet.keys()];
+    const table = [...allObjects.keys()].map(name => {
+        const obj = allObjects.get(name);
+        const row = { _name: name, _avgScore: 0, _filled: 0 };
+        let total = 0, count = 0;
+        for (const p of params) {
+            const d = obj.params.get(p);
+            const avg = d && d.tw > 0 ? Math.round(d.ws / d.tw * 10) / 10 : null;
+            row[p] = avg;
+            if (avg !== null) { total += avg; count++; }
+        }
+        row._filled = count;
+        row._avgScore = count > 0 ? Math.round(total / count * 10) / 10 : null;
+        return row;
+    });
+    table.sort((a, b) => (b._avgScore || 0) - (a._avgScore || 0));
+    return { table, params, displayNames: paramSet };
+}
+
+export default function DecisionPage() {
+    const navigate = useNavigate();
+    const [tables, setTables] = useState([]);
+    const [selectedTable, setSelectedTable] = useState(null);
+    const [topic, setTopic] = useState('');
+    const [topicDesc, setTopicDesc] = useState('');
+    const [personas, setPersonas] = useState([]);
+    const [input, setInput] = useState('');
+    const [running, setRunning] = useState(false);
+    const [mode, setMode] = useState('sequential');
+    const [loaded, setLoaded] = useState(false);
+    const [lastResult, setLastResult] = useState(null);
+    const [activeTab, setActiveTab] = useState('result');
+    const [saveStatus, setSaveStatus] = useState('');
+
+    useEffect(() => {
+        API.get('/v1/api/tables?limit=50').then(d => { const t = d.tables || d; setTables(Array.isArray(t) ? t : []); }).catch(() => {});
+        (async () => { try { if (!API.token) { for (let i = 0; i < 10; i++) { await new Promise(r => setTimeout(r, 300)); if (API.token) break; } try { const d = await API.post('/v1/api/auth/dev-login', { role: 'admin' }); if (d.token) API.setToken(d.token); } catch {} } const d = await API.get('/v1/api/council/personas'); setPersonas((d.personas || []).filter(p => p.enabled)); setLoaded(true); } catch { setTimeout(() => window.location.reload(), 2000); } })();
+    }, []);
+
+    const runCouncil = async () => {
+        if (!topic.trim() || running || !loaded) return;
+        setRunning(true); setLastResult(null); setActiveTab('result');
+        try {
+            const body = { question: input || `Что рекомендуете по вопросу: ${topic}? ${topicDesc}`, mode };
+            if (selectedTable) body.tableId = selectedTable.id; else if (topic) body.topic = topic;
+            const d = await API.post('/v1/api/council/decide', body);
+            setLastResult(d);
+        } catch (e) { setLastResult({ error: e.message }); }
+        setRunning(false);
+    };
+
+    const saveAsTable = async () => {
+        if (!lastResult) return;
+        setSaveStatus('saving');
+        try {
+            const comp = buildComparisonTable(lastResult.votes);
+            if (comp.table.length === 0) { setSaveStatus('error'); return; }
+            const columns = [{ title: 'Альтернатива', weight: 0, type: 'text' }, ...comparison.params.map(p => ({ title: (comparison.displayNames.get(p) || p), weight: Math.round(100 / comparison.params.length), type: 'number' })), { title: 'Средний балл', weight: 0, type: 'number' }];
+            const rows = comp.table.map(row => { const r = { 'Альтернатива': row._name }; for (const p of comp.params) r[(comp.displayNames.get(p) || p)] = row[p]; r['Средний балл'] = row._avgScore; return r; });
+            const created = await API.post('/v1/api/tables', { title: `Совет: ${topic}`, description: `${new Date().toLocaleString('ru')}. ${lastResult.consensus?.recommendation || ''}`, columns, rows });
+            setSaveStatus(created?.id ? 'saved' : 'error');
+        } catch { setSaveStatus('error'); }
+    };
+
+    const isDark = document.body.classList.contains('dark');
+    const brd = isDark ? '#334155' : '#e2e8f0';
+    const bg = isDark ? '#1e293b' : '#fff';
+    const bgI = isDark ? '#0f172a' : '#f8fafc';
+    const tM = isDark ? '#f1f5f9' : '#0f172a';
+    const tS = isDark ? '#94a3b8' : '#64748b';
+    const inp = { width: '100%', padding: 8, borderRadius: 6, border: `1px solid ${isDark ? '#475569' : '#e2e8f0'}`, fontSize: 13, marginBottom: 8, boxSizing: 'border-box', background: isDark ? '#0f172a' : '#fff', color: tM };
+
+    const comparison = lastResult && !lastResult.error ? buildComparisonTable(lastResult.votes) : null;
+    const sc = (v) => v >= 8 ? '#22c55e' : v >= 6 ? '#eab308' : v >= 4 ? '#f97316' : '#ef4444';
+
+    return (
+        <div style={{ display: 'flex', height: 'calc(100vh - 60px)', background: bg }}>
+            {/* SIDEBAR */}
+            <div style={{ width: 340, borderRight: `1px solid ${brd}`, display: 'flex', flexDirection: 'column', background: bgI }}>
+                <div style={{ padding: '12px 16px', borderBottom: `1px solid ${brd}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <h3 style={{ margin: 0, fontSize: 15, color: tM }}>🏛️ Принять решение</h3>
+                    <button onClick={() => navigate('/')} style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: 18, color: tS }}>✕</button>
+                </div>
+                <div style={{ padding: '12px 16px', borderBottom: `1px solid ${brd}` }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: tS, marginBottom: 8 }}>🎯 Что выбираем?</div>
+                    <input value={topic} onChange={e => setTopic(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); runCouncil(); } }} placeholder="Например: Лучший ноутбук для работы" style={inp} />
+                    <textarea value={topicDesc} onChange={e => setTopicDesc(e.target.value)} placeholder="Описание, критерии, бюджет..." style={{ ...inp, height: 80, resize: 'vertical' }} />
+                    <button onClick={() => { setTopic('Какую подписку на LLM-сервис выбрать?'); setTopicDesc(TEST_TOPIC); const f = tables.find(t => t.title?.toLowerCase().includes('подписк')); if (f) { setSelectedTable(f); setTopic(f.title); } }} style={{ width: '100%', padding: 7, background: '#8b5cf6', color: '#fff', border: 'none', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 500, marginBottom: 8 }}>🧪 Заполнить тест (LLM-подписки)</button>
+                </div>
+                <div style={{ padding: '8px 16px', borderBottom: `1px solid ${brd}` }}>
+                    <div style={{ fontSize: 10, fontWeight: 600, color: tS, marginBottom: 4 }}>📎 Или привязать таблицу</div>
+                    <select value={selectedTable?.id || ''} onChange={e => { const t = tables.find(x => x.id == e.target.value); if (t) { setSelectedTable(t); setTopic(t.title); setTopicDesc(t.description || ''); } else setSelectedTable(null); }} style={{ ...inp, marginBottom: 0 }}>
+                        <option value="">— Не выбрано —</option>
+                        {tables.map(t => <option key={t.id} value={t.id}>{t.title}</option>)}
+                    </select>
+                </div>
+                <div style={{ padding: '8px 16px', borderBottom: `1px solid ${brd}`, display: 'flex', gap: 6 }}>
+                    <button onClick={() => setMode('sequential')} style={{ flex: 1, padding: 4, border: mode === 'sequential' ? '2px solid #3b82f6' : `1px solid ${brd}`, borderRadius: 4, background: mode === 'sequential' ? '#3b82f622' : bg, color: mode === 'sequential' ? '#3b82f6' : tS, cursor: 'pointer', fontSize: 11 }}>🔄 По очереди</button>
+                    <button onClick={() => setMode('parallel')} style={{ flex: 1, padding: 4, border: mode === 'parallel' ? '2px solid #22c55e' : `1px solid ${brd}`, borderRadius: 4, background: mode === 'parallel' ? '#22c55e22' : bg, color: mode === 'parallel' ? '#22c55e' : tS, cursor: 'pointer', fontSize: 11 }}>⚡ Параллельно</button>
+                </div>
+                <div style={{ flex: 1, overflow: 'auto', padding: '8px 16px' }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: tS, marginBottom: 6 }}>👥 Совет {!loaded ? '(⏳...)' : `(${personas.length} активно)`}</div>
+                    {personas.map(p => (
+                        <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '4px 8px', borderRadius: 6, marginBottom: 2, background: bg, border: `1px solid ${brd}` }}>
+                            <span style={{ fontSize: 16 }}>{p.emoji}</span>
+                            <span style={{ flex: 1, fontSize: 12, color: tM }}>{p.name}</span>
+                            <span style={{ fontSize: 10, color: tS }}>w={p.weight}</span>
+                        </div>
+                    ))}
+                </div>
+                <div style={{ padding: '12px 16px', borderTop: `1px solid ${brd}` }}>
+                    <button onClick={runCouncil} disabled={!topic.trim() || running || !loaded} style={{ width: '100%', padding: 10, background: topic.trim() && loaded ? 'linear-gradient(135deg, #f59e0b, #ef4444)' : (isDark ? '#334155' : '#cbd5e1'), color: '#fff', border: 'none', borderRadius: 8, cursor: topic.trim() && loaded ? 'pointer' : 'default', fontSize: 14, fontWeight: 600 }}>
+                        {!loaded ? '⏳ Загрузка...' : running ? '⏳ Советует...' : '🚀 Начать'}
+                    </button>
+                </div>
+            </div>
+
+            {/* MAIN */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: bg }}>
+                {/* TABS */}
+                {lastResult && (
+                    <div style={{ display: 'flex', borderBottom: `1px solid ${brd}`, background: bgI, alignItems: 'center', paddingRight: 16 }}>
+                        <button onClick={() => setActiveTab('result')} style={{ padding: '10px 20px', border: 'none', borderBottom: activeTab === 'result' ? '3px solid #3b82f6' : '3px solid transparent', background: 'none', color: activeTab === 'result' ? tM : tS, cursor: 'pointer', fontSize: 13, fontWeight: activeTab === 'result' ? 700 : 400 }}>
+                            📊 Таблица результата {comparison ? <span style={{ marginLeft: 4, padding: '1px 6px', borderRadius: 10, background: '#3b82f6', color: '#fff', fontSize: 10 }}>{comparison.table.length}</span> : ''}
+                        </button>
+                        <button onClick={() => setActiveTab('logs')} style={{ padding: '10px 20px', border: 'none', borderBottom: activeTab === 'logs' ? '3px solid #3b82f6' : '3px solid transparent', background: 'none', color: activeTab === 'logs' ? tM : tS, cursor: 'pointer', fontSize: 13, fontWeight: activeTab === 'logs' ? 700 : 400 }}>
+                            🔍 Логи рассуждений {lastResult.votes ? <span style={{ marginLeft: 4, padding: '1px 6px', borderRadius: 10, background: '#3b82f6', color: '#fff', fontSize: 10 }}>{lastResult.votes.length}</span> : ''}
+                        </button>
+                        <div style={{ flex: 1 }} />
+                        <div style={{ display: 'flex', gap: 12, fontSize: 11, color: tS, alignItems: 'center' }}>
+                            {lastResult.meta && <span>{lastResult.meta.model} · {(lastResult.meta.total_duration_ms / 1000).toFixed(1)}s</span>}
+                            {lastResult.tokens && <span>🔢 {(lastResult.tokens.input + lastResult.tokens.output)?.toLocaleString()} tok</span>}
+                            {lastResult.consensus?.recommendation && lastResult.consensus.recommendation !== 'insufficient_data' && (
+                                <span style={{ padding: '2px 8px', borderRadius: 10, background: '#22c55e22', color: '#22c55e', fontWeight: 600 }}>👑 {lastResult.consensus.recommendation}</span>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {/* CONTENT */}
+                <div style={{ flex: 1, overflow: 'auto' }}>
+                    {!lastResult && !running && (
+                        <div style={{ textAlign: 'center', color: tS, marginTop: 80 }}>
+                            <div style={{ fontSize: 48, marginBottom: 12 }}>🏛️</div>
+                            <div style={{ fontSize: 18, fontWeight: 600, color: tM }}>Совет AI-агентов</div>
+                            <div style={{ fontSize: 13, marginTop: 8, lineHeight: 1.8 }}>Опишите что хотите выбрать слева<br />Или нажмите «🧪 Заполнить тест»</div>
+                        </div>
+                    )}
+                    {running && (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: 16 }}>
+                            <div style={{ fontSize: 48 }}>⏳</div>
+                            <div style={{ fontSize: 16, fontWeight: 600, color: tM }}>Совет обсуждает ({personas.length} агентов)...</div>
+                            <div style={{ fontSize: 13, color: tS }}>2-5 минут</div>
+                        </div>
+                    )}
+                    {lastResult?.error && <div style={{ padding: 40, textAlign: 'center' }}><div style={{ fontSize: 48, marginBottom: 12 }}>❌</div><div style={{ fontSize: 16, color: '#ef4444' }}>{lastResult.error}</div></div>}
+
+                    {/* TAB: RESULT */}
+                    {lastResult && !lastResult.error && activeTab === 'result' && (
+                        <div style={{ padding: 20 }}>
+                            {lastResult.editorSummary && (
+                                <div style={{ border: `1px solid ${isDark ? '#166534' : '#bbf7d0'}`, borderRadius: 12, padding: 16, background: isDark ? '#052e16' : '#f0fdf4', marginBottom: 16 }}>
+                                    <div style={{ fontSize: 14, fontWeight: 700, color: tM, marginBottom: 8 }}>📝 Резюме Редактора</div>
+                                    <div style={{ fontSize: 13, color: tM, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{lastResult.editorSummary}</div>
+                                </div>
+                            )}
+                            {comparison && comparison.table.length > 0 && (
+                                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
+                                    {saveStatus !== 'saved' ? <button onClick={saveAsTable} disabled={saveStatus === 'saving'} style={{ padding: '8px 20px', background: '#22c55e', color: '#fff', border: 'none', borderRadius: 8, cursor: 'pointer', fontSize: 13, fontWeight: 600 }}>{saveStatus === 'saving' ? '⏳ Сохраняю...' : '💾 Сохранить в мои таблицы'}</button>
+                                        : <span style={{ padding: '8px 20px', background: '#22c55e22', color: '#22c55e', borderRadius: 8, fontSize: 13, fontWeight: 600 }}>✅ Сохранено</span>}
+                                </div>
+                            )}
+                            {comparison && comparison.table.length > 0 ? (
+                                <div style={{ border: '2px solid #3b82f6', borderRadius: 12, overflow: 'hidden' }}>
+                                    <div style={{ overflow: 'auto', maxHeight: 'calc(100vh - 320px)' }}>
+                                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+                                            <thead>
+                                                <tr style={{ background: isDark ? '#0f172a' : '#f1f5f9', position: 'sticky', top: 0, zIndex: 1 }}>
+                                                    <th style={{ padding: '8px 10px', textAlign: 'center', borderBottom: `2px solid ${brd}`, color: tS, width: 30 }}>#</th>
+                                                    <th style={{ padding: '8px 12px', textAlign: 'left', borderBottom: `2px solid ${brd}`, color: tM, fontWeight: 700, minWidth: 120 }}>Альтернатива</th>
+                                                    {comparison.params.map(p => <th key={p} style={{ padding: '6px 4px', textAlign: 'center', borderBottom: `2px solid ${brd}`, color: tS, fontSize: 10, whiteSpace: 'nowrap', minWidth: 40 }}>
+                                                        <div>{(comparison.displayNames.get(p) || p).replace(/_/g, ' ')}</div>
+                                                    </th>)}
+                                                    <th style={{ padding: '8px 10px', textAlign: 'center', borderBottom: `2px solid ${brd}`, color: '#f59e0b', fontWeight: 700, minWidth: 50 }}>⭐ Utility</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {comparison.table.map((row, i) => {
+                                                    const isBest = i === 0 && row._avgScore;
+                                                    // Grade cell: colored background like Choser
+                                                    const gradeBg = (g) => {
+                                                        if (g === null || g === undefined) return isDark ? '#1a1a2e' : '#f8f8f8';
+                                                        const v = Math.max(0, Math.min(10, g));
+                                                        if (v >= 9) return isDark ? '#064e3b' : '#d1fae5';
+                                                        if (v >= 7) return isDark ? '#065f46' : '#a7f3d0';
+                                                        if (v >= 5) return isDark ? '#1e3a5f' : '#bfdbfe';
+                                                        if (v >= 3) return isDark ? '#3b2f1e' : '#fef3c7';
+                                                        return isDark ? '#3b1e1e' : '#fecaca';
+                                                    };
+                                                    const gradeColor = (g) => {
+                                                        if (g === null || g === undefined) return tS;
+                                                        if (g >= 9) return '#10b981';
+                                                        if (g >= 7) return '#22c55e';
+                                                        if (g >= 5) return '#3b82f6';
+                                                        if (g >= 3) return '#f59e0b';
+                                                        return '#ef4444';
+                                                    };
+                                                    return (
+                                                        <tr key={i} style={{ background: isBest ? (isDark ? '#052e16' : '#f0fdf4') : (i % 2 ? bgI : bg) }}>
+                                                            <td style={{ padding: '6px 10px', borderBottom: `1px solid ${brd}`, color: tS, fontWeight: 600, textAlign: 'center' }}>{i + 1}</td>
+                                                            <td style={{ padding: '6px 12px', borderBottom: `1px solid ${brd}`, color: tM, fontWeight: isBest ? 700 : 500, whiteSpace: 'nowrap' }}>
+                                                                {isBest && '👑 '}{row._name}
+                                                            </td>
+                                                            {comparison.params.map(p => {
+                                                                const g = row[p];
+                                                                return (
+                                                                    <td key={p} style={{
+                                                                        padding: '4px 2px', textAlign: 'center', borderBottom: `1px solid ${brd}`,
+                                                                        fontWeight: 600, fontSize: 11,
+                                                                        background: gradeBg(g),
+                                                                        color: g !== null && g !== undefined ? gradeColor(g) : tS,
+                                                                        borderRadius: 4, margin: 1
+                                                                    }}>
+                                                                        {g !== null && g !== undefined ? Math.round(g) : <span style={{ fontSize: 9, opacity: 0.6 }}>нет данных</span>}
+                                                                    </td>
+                                                                );
+                                                            })}
+                                                            <td style={{ padding: '6px 10px', textAlign: 'center', borderBottom: `1px solid ${brd}`, color: '#f59e0b', fontWeight: 700, fontSize: 14, background: isBest ? 'transparent' : (isDark ? '#1a1a0a' : '#fffbeb'), borderRadius: 4 }}>
+                                                                {row._avgScore !== null ? row._avgScore : '—'}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            ) : <div style={{ textAlign: 'center', color: tS, padding: 40 }}><div style={{ fontSize: 32, marginBottom: 8 }}>🤷</div>Агенты не дали числовых оценок</div>}
+                        </div>
+                    )}
+
+                    {/* TAB: LOGS */}
+                    {lastResult && !lastResult.error && activeTab === 'logs' && (
+                        <div style={{ padding: 12, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                            {(lastResult.votes || []).map((v, i) => {
+                                const d = v.debug || {};
+                                const j = extractJSON(v.response);
+                                return (
+                                    <details key={i} style={{ border: `1px solid ${brd}`, borderRadius: 8, overflow: 'hidden' }}>
+                                        <summary style={{ padding: '10px 14px', cursor: 'pointer', background: bgI, display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: tM, fontSize: 13, listStyle: 'none' }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <span>{v.emoji}</span><strong>{v.name}</strong>
+                                                <span style={{ fontSize: 11, color: v.recommendation && v.recommendation !== 'insufficient_data' ? '#22c55e' : tS }}>{v.recommendation || '—'}</span>
+                                                {v.score ? <span style={{ fontSize: 11, color: '#f59e0b' }}>score:{v.score}</span> : null}
+                                                {v.confidence ? <span style={{ fontSize: 11, color: tS }}>conf:{v.confidence}/10</span> : null}
+                                            </span>
+                                            <span style={{ fontSize: 10, color: tS, fontFamily: 'monospace' }}>{d.provider || '?'} · {d.model || '?'} · {d.duration_ms ? `${(d.duration_ms / 1000).toFixed(1)}s` : '?'} · {d.tokens_in || 0}↓{d.tokens_out || 0}↑</span>
+                                        </summary>
+                                        <div style={{ padding: 14, fontSize: 12, lineHeight: 1.7, color: tM, whiteSpace: 'pre-wrap', maxHeight: 400, overflow: 'auto', borderTop: `1px solid ${brd}` }}>
+                                            {j?.analysis && <div style={{ marginBottom: 10, padding: '8px 12px', background: bgI, borderRadius: 6, borderLeft: '3px solid #3b82f6', color: tS }}>{j.analysis}</div>}
+                                            {v.response}
+                                        </div>
+                                    </details>
+                                );
+                            })}
+                            {lastResult.debug && (
+                                <div style={{ padding: 12, background: bgI, borderRadius: 8, fontSize: 11, color: tS, fontFamily: 'monospace' }}>
+                                    <strong>Trace:</strong><br />{lastResult.debug.map((d, i) => `${d.persona}: ${d.status} ${d.ms}ms (${d.provider || '?'}/${d.model || '?'})`).join(' → ')}
+                                </div>
+                            )}
+                            {lastResult.consensus?.recommendations && (
+                                <div style={{ padding: 12, background: bgI, borderRadius: 8 }}>
+                                    <div style={{ fontSize: 12, fontWeight: 700, color: tM, marginBottom: 8 }}>📊 Голосование</div>
+                                    {Object.entries(lastResult.consensus.recommendations).map(([r, w]) => (
+                                        <div key={r} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                            <div style={{ flex: 1, fontSize: 12, color: tM }}>{r}</div>
+                                            <div style={{ width: Math.round(w * 30), height: 14, background: '#3b82f6', borderRadius: 4, opacity: 0.7 }} />
+                                            <div style={{ fontSize: 11, color: tS, width: 30, textAlign: 'right' }}>{w.toFixed(1)}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                {/* INPUT */}
+                <div style={{ padding: '12px 20px', borderTop: `1px solid ${brd}`, display: 'flex', gap: 8, background: bg }}>
+                    <input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); runCouncil(); } }} placeholder={topic ? `Вопрос по «${topic}»...` : 'Опишите задачу слева...'} disabled={!topic || running} style={{ flex: 1, padding: '10px 14px', border: `1px solid ${brd}`, borderRadius: 8, fontSize: 14, background: topic ? bg : bgI, color: tM }} />
+                    <button onClick={runCouncil} disabled={!topic || running || !loaded} style={{ padding: '10px 24px', background: running ? (isDark ? '#334155' : '#94a3b8') : 'linear-gradient(135deg, #f59e0b, #ef4444)', color: '#fff', border: 'none', borderRadius: 8, cursor: running ? 'default' : 'pointer', fontSize: 14, fontWeight: 600 }}>{running ? '⏳' : '🚀 Запустить'}</button>
+                </div>
+            </div>
+        </div>
+    );
+}

@@ -1,0 +1,9 @@
+{
+  "meta": { "name": "Deutsch", "code": "de", "dir": "ltr" },
+  "nav": { "tables": "Tabellen", "council": "Rat", "admin": "Admin", "settings": "Einstellungen", "catalog": "Katalog", "research": "Recherche" },
+  "council": { "title": "Expertenrat", "sequential": "Sequentiell", "parallel": "Parallel", "start": "🚀 Starten", "started": "Rat gestartet", "agents": "Agenten", "question": "Frage an den Rat", "weight": "Gewicht", "score": "Bewertung", "confidence": "Konfidenz", "recommendation": "Empfehlung", "consensus": "Konsens", "editor_summary": "Editor-Zusammenfassung", "running": "Der Rat berät...", "completed": "Rat abgeschlossen", "persona": "Denkt nach" },
+  "table": { "title": "Titel", "add": "Hinzufügen", "save": "Speichern", "cancel": "Abbrechen", "delete": "Löschen", "edit": "Bearbeiten", "search": "Suchen...", "columns": "Parameter", "rows": "Zeilen", "weight": "Gewicht", "no_data": "Keine Daten", "export": "Exportieren", "import": "Importieren", "share": "Teilen" },
+  "error": { "timeout": "Zeitüberschreitung", "no_connection": "Keine Internetverbindung", "generic": "Fehler", "not_found": "Nicht gefunden", "try_again": "Erneut versuchen", "check_internet": "Internet prüfen" },
+  "admin": { "stats": "Statistiken", "users": "Benutzer", "backup": "Backup", "settings": "Einstellungen", "analytics": "Analytik", "decisions": "Entscheidungen", "tables_count": "Tabellen", "rows_count": "Zeilen", "tokens_used": "Tokens verbraucht", "db_size": "DB-Größe" },
+  "common": { "loading": "Laden...", "save": "Speichern", "cancel": "Abbrechen", "delete": "Löschen", "add": "Hinzufügen", "edit": "Bearbeiten", "close": "Schließen", "confirm": "Bestätigen", "yes": "Ja", "no": "Nein", "ok": "OK", "language": "Sprache" }
+}

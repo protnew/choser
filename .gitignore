@@ -1,0 +1,9 @@
+.env
+node_modules/
+data/
+backup/
+*.db
+*.db-*
+*.sql
+edp/data/
+edp/backup/
