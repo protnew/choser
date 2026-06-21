@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback, useEffect } fr
 import { getLocale, setLocale, LANGUAGES } from '../i18n';
 
 const LangContext = createContext({
-  locale: 'en',
+  locale: 'ru',
   changeLocale: () => {},
   languages: LANGUAGES,
 });
