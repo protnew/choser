@@ -92,7 +92,9 @@
     },
     "topic": "Topic",
     "web": "Web",
-    "yesterday": "Вчера"
+    "yesterday": "Вчера",
+    "startBtn": "🚀 Start Council ({n})",
+    "decisionTree": "🌳 Decision Tree"
   },
   "table": {
     "title": "Title",

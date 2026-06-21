@@ -31,8 +31,9 @@ export function useCouncilStream() {
     const [shareLink, setShareLink] = useState('');
     const [agentStatuses, setAgentStatuses] = useState({}); // { personaId: { status, duration_ms, tokens_in, tokens_out, recommendation } }
     const [currentThinking, setCurrentThinking] = useState(null); // { id, name, emoji } of currently thinking agent
-    const [tokenBudget, setTokenBudget] = useState(draft.tokenBudget || 80000);
-    const [maxDuration, setMaxDuration] = useState(draft.maxDuration || 15);
+    const [tokenBudget, setTokenBudget] = useState(draft.tokenBudget || 200000);
+    const [wantTree, setWantTree] = useState(false);
+    const [maxDuration, setMaxDuration] = useState(draft.maxDuration || 20);
     const [runStartMs, setRunStartMs] = useState(0);
     const [elapsedMs, setElapsedMs] = useState(0);
     const [councilWarning, setCouncilWarning] = useState(null);       // { type, empty_cells, fill_rate, message }
@@ -476,7 +477,7 @@ export function useCouncilStream() {
         saveStatus, setSaveStatus, shareLink, setShareLink,
         agentStatuses, currentThinking, elapsedMs,
         councilWarning, councilRecommendation,
-        tokenBudget, setTokenBudget, maxDuration, setMaxDuration,
+        tokenBudget, setTokenBudget, maxDuration, setMaxDuration, wantTree, setWantTree,
         runCouncil, stopCouncil, saveAsTable, shareResult,
         comparison,
         councilHistory, loadFromHistory, clearHistory,

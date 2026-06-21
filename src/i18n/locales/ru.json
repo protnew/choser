@@ -92,7 +92,9 @@
     },
     "topic": "Тема",
     "web": "Веб",
-    "yesterday": "Вчера"
+    "yesterday": "Вчера",
+    "startBtn": "🚀 Запустить Совет ({n})",
+    "decisionTree": "🌳 Дерево решений"
   },
   "table": {
     "title": "Название",

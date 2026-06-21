@@ -138,7 +138,7 @@ export function councilEngineRoutes(app) {
             'Authorization': 'Bearer ' + apiKey
           },
           body: JSON.stringify({
-            model: 'GLM-5.1',
+            model: 'GLM-5.2',
             messages: [
               {role: 'system', content: prompt},
               {role: 'user', content: msg}
@@ -268,7 +268,7 @@ export function councilEngineRoutes(app) {
           'Authorization': 'Bearer ' + apiKey
         },
         body: JSON.stringify({
-          model: 'GLM-5.1',
+          model: 'GLM-5.2',
           messages: [
             {role: 'system', content: prompt},
             {role: 'user', content: 'Тема: ' + topic}

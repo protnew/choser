@@ -26,6 +26,7 @@ export default function DecisionPage() {
         agentStatuses, currentThinking, elapsedMs,
         councilWarning, councilRecommendation,
         tokenBudget, setTokenBudget, maxDuration, setMaxDuration,
+        wantTree, setWantTree,
         runCouncil, stopCouncil, saveAsTable, shareResult,
         comparison,
         councilHistory, loadFromHistory, clearHistory,
@@ -110,6 +111,7 @@ export default function DecisionPage() {
                     currentThinking={currentThinking} runCouncil={runCouncil} stopCouncil={stopCouncil}
                     tokenBudget={tokenBudget} setTokenBudget={setTokenBudget}
                     maxDuration={maxDuration} setMaxDuration={setMaxDuration}
+                wantTree={wantTree} setWantTree={setWantTree}
                     isDark={isDark} brd={brd} bg={bg} bgI={bgI} tM={tM} tS={tS} inp={inp}
                 />
 

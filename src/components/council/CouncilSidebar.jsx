@@ -76,6 +76,7 @@ export default function CouncilSidebar({
     personas, setPersonas, enabledAgents, setEnabledAgents,
     agentStatuses, running, loaded, currentThinking,
     tokenBudget, setTokenBudget, maxDuration, setMaxDuration,
+    wantTree, setWantTree,
     runCouncil, isDark, brd, bg, bgI, tM, tS, inp,
     // History props (from useCouncilStream via DecisionPage)
     councilHistory, loadFromHistory, clearHistory,
@@ -129,7 +130,7 @@ export default function CouncilSidebar({
                                 ? `${currentThinking.emoji} ${currentThinking.name} ${t('progress.thinking')}`
                                 : running
                                     ? `⏳ ${enabledCount} ${t('council.advisingAgents')}`
-                                    : t('council.startBtn', { n: enabledCount })
+                                    : '🚀 Запустить Совет (' + enabledCount + ')'
                         }
                     </button>
                 </div>
@@ -270,6 +271,7 @@ export default function CouncilSidebar({
                         </div>
                     </div>
 
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 6, padding: "0 14px" }}><label style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, cursor: "pointer", color: tS }}><input type="checkbox" checked={!!wantTree} onChange={e => setWantTree(e.target.checked)} style={{ width: 14, height: 14, accentColor: "#3b82f6", cursor: "pointer" }} />Tree</label></div>
                     {/* ── AGENTS ── */}
                     <SectionLabel brd={brd}>
                         👥 {t('council.agents')} ({enabledCount}/{totalCount})
