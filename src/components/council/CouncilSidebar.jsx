@@ -271,7 +271,13 @@ export default function CouncilSidebar({
                         </div>
                     </div>
 
-                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 6, padding: "0 14px" }}><label style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 11, cursor: "pointer", color: tS }}><input type="checkbox" checked={!!wantTree} onChange={e => setWantTree(e.target.checked)} style={{ width: 14, height: 14, accentColor: "#3b82f6", cursor: "pointer" }} />Tree</label></div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 6, padding: "0 14px" }}>
+                            <label style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 12, cursor: "pointer", color: tS, fontWeight: 600 }}>
+                                <input type="checkbox" checked={!!wantTree} onChange={e => setWantTree(e.target.checked)}
+                                    style={{ width: 16, height: 16, accentColor: "#3b82f6", cursor: "pointer" }} />
+                                {"\uD83C\uDF33 \u0414\u0435\u0440\u0435\u0432\u043E \u0440\u0435\u0448\u0435\u043D\u0438\u0439"}
+                            </label>
+                        </div>
                     {/* ── AGENTS ── */}
                     <SectionLabel brd={brd}>
                         👥 {t('council.agents')} ({enabledCount}/{totalCount})
